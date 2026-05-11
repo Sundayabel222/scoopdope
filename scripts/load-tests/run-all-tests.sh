@@ -1,14 +1,14 @@
 #!/bin/bash
 set -e
 
-# Load Testing Script for Brain-Storm
+# Load Testing Script for scoopdope
 # Runs various load test scenarios and generates reports
 
 API_URL="${API_URL:-http://localhost:3000}"
 RESULTS_DIR="./load-test-results"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 
-echo "🚀 Starting Brain-Storm Load Tests"
+echo "🚀 Starting scoopdope Load Tests"
 echo "API URL: $API_URL"
 echo "Results Directory: $RESULTS_DIR"
 

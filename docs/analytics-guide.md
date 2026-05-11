@@ -133,7 +133,7 @@ Results are ordered by `updatedAt DESC`.
 
 ## Leaderboard Calculation
 
-The leaderboard ranks students by their BST (Brain-Storm Token) balance on the Stellar network.
+The leaderboard ranks students by their BST (scoopdope Token) balance on the Stellar network.
 
 ### Logic
 
@@ -178,7 +178,7 @@ Progress data can be exported from the PostgreSQL database or queried directly f
 
 ```bash
 curl -H "Authorization: Bearer <token>" \
-  https://api.brain-storm.com/v1/users/<userId>/progress
+  https://api.scoopdope.com/v1/users/<userId>/progress
 ```
 
 ### CSV (direct DB query)

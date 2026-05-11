@@ -1,6 +1,6 @@
 # Accessibility Testing Guide
 
-This document outlines the accessibility testing strategy for Brain-Storm, ensuring WCAG 2.1 AA compliance.
+This document outlines the accessibility testing strategy for scoopdope, ensuring WCAG 2.1 AA compliance.
 
 ## Testing Framework
 

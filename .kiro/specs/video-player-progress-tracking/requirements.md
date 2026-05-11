@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This feature adds a custom video player to lesson content pages in the Brain-Storm learning platform. The player integrates with the existing progress tracking backend (`POST /progress`) to automatically record watch progress per lesson. It also provides playback speed controls, picture-in-picture mode, and keyboard shortcuts to improve the learner experience.
+This feature adds a custom video player to lesson content pages in the scoopdope learning platform. The player integrates with the existing progress tracking backend (`POST /progress`) to automatically record watch progress per lesson. It also provides playback speed controls, picture-in-picture mode, and keyboard shortcuts to improve the learner experience.
 
 The player is built on top of Plyr (a lightweight, accessible HTML5 video wrapper) and integrates with the existing Zustand progress store and the `api` Axios client.
 

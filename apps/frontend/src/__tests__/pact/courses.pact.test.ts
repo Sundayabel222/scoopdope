@@ -2,8 +2,8 @@ import { PactV3 } from '@pact-foundation/pact';
 import axios from 'axios';
 
 const pact = new PactV3({
-  consumer: 'BrainStorm-Frontend',
-  provider: 'BrainStorm-Backend',
+  consumer: 'Scoopdope-Frontend',
+  provider: 'Scoopdope-Backend',
   dir: './pacts',
 });
 

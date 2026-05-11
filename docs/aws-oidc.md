@@ -107,7 +107,7 @@ Attach this policy to the role (adjust based on your deployment needs):
         "ecs:ListTasks"
       ],
       "Resource": [
-        "arn:aws:ecs:*:YOUR_AWS_ACCOUNT_ID:service/production/brain-storm-backend",
+        "arn:aws:ecs:*:YOUR_AWS_ACCOUNT_ID:service/production/scoopdope-backend",
         "arn:aws:ecs:*:YOUR_AWS_ACCOUNT_ID:task/production/*"
       ]
     },
@@ -130,7 +130,7 @@ Attach this policy to the role (adjust based on your deployment needs):
         "logs:CreateLogStream",
         "logs:PutLogEvents"
       ],
-      "Resource": "arn:aws:logs:*:YOUR_AWS_ACCOUNT_ID:log-group:/aws/ecs/brain-storm-*"
+      "Resource": "arn:aws:logs:*:YOUR_AWS_ACCOUNT_ID:log-group:/aws/ecs/scoopdope-*"
     }
   ]
 }
@@ -156,7 +156,7 @@ The deployment workflow has been updated to use OIDC. Key changes:
   uses: aws-actions/configure-aws-credentials@v4
   with:
     role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-    role-session-name: GitHubActions-BrainStorm-Production
+    role-session-name: GitHubActions-Scoopdope-Production
     aws-region: ${{ secrets.AWS_REGION }}
 ```
 

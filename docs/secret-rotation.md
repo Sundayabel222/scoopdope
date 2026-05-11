@@ -2,7 +2,7 @@
 
 ## Overview
 
-Brain-Storm implements automated and manual secret rotation to minimize exposure from compromised credentials.
+scoopdope implements automated and manual secret rotation to minimize exposure from compromised credentials.
 
 ## API Key Rotation
 

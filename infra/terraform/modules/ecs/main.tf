@@ -1,5 +1,5 @@
 resource "aws_ecs_cluster" "main" {
-  name = "${var.environment}-brain-storm-cluster"
+  name = "${var.environment}-scoopdope-cluster"
 
   setting {
     name  = "containerInsights"
@@ -7,13 +7,13 @@ resource "aws_ecs_cluster" "main" {
   }
 
   tags = {
-    Name        = "${var.environment}-brain-storm-cluster"
+    Name        = "${var.environment}-scoopdope-cluster"
     Environment = var.environment
   }
 }
 
 resource "aws_ecs_task_definition" "backend" {
-  family                   = "${var.environment}-brain-storm-backend"
+  family                   = "${var.environment}-scoopdope-backend"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = "512"
@@ -55,13 +55,13 @@ resource "aws_ecs_task_definition" "backend" {
   }])
 
   tags = {
-    Name        = "${var.environment}-brain-storm-backend-task"
+    Name        = "${var.environment}-scoopdope-backend-task"
     Environment = var.environment
   }
 }
 
 resource "aws_ecs_service" "backend" {
-  name            = "${var.environment}-brain-storm-backend"
+  name            = "${var.environment}-scoopdope-backend"
   cluster         = aws_ecs_cluster.main.id
   task_definition = aws_ecs_task_definition.backend.arn
   desired_count   = 2
@@ -83,7 +83,7 @@ resource "aws_ecs_service" "backend" {
 }
 
 resource "aws_security_group" "ecs_backend" {
-  name        = "${var.environment}-brain-storm-ecs-backend-sg"
+  name        = "${var.environment}-scoopdope-ecs-backend-sg"
   description = "Security group for ECS backend tasks"
   vpc_id      = var.vpc_id
 
@@ -102,13 +102,13 @@ resource "aws_security_group" "ecs_backend" {
   }
 
   tags = {
-    Name        = "${var.environment}-brain-storm-ecs-backend-sg"
+    Name        = "${var.environment}-scoopdope-ecs-backend-sg"
     Environment = var.environment
   }
 }
 
 resource "aws_lb_target_group" "backend" {
-  name        = "${var.environment}-brain-storm-backend-tg"
+  name        = "${var.environment}-scoopdope-backend-tg"
   port        = 3000
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
@@ -123,23 +123,23 @@ resource "aws_lb_target_group" "backend" {
   }
 
   tags = {
-    Name        = "${var.environment}-brain-storm-backend-tg"
+    Name        = "${var.environment}-scoopdope-backend-tg"
     Environment = var.environment
   }
 }
 
 resource "aws_cloudwatch_log_group" "backend" {
-  name              = "/ecs/${var.environment}-brain-storm-backend"
+  name              = "/ecs/${var.environment}-scoopdope-backend"
   retention_in_days = 7
 
   tags = {
-    Name        = "${var.environment}-brain-storm-backend-logs"
+    Name        = "${var.environment}-scoopdope-backend-logs"
     Environment = var.environment
   }
 }
 
 resource "aws_iam_role" "ecs_execution" {
-  name = "${var.environment}-brain-storm-ecs-execution-role"
+  name = "${var.environment}-scoopdope-ecs-execution-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -153,7 +153,7 @@ resource "aws_iam_role" "ecs_execution" {
   })
 
   tags = {
-    Name        = "${var.environment}-brain-storm-ecs-execution-role"
+    Name        = "${var.environment}-scoopdope-ecs-execution-role"
     Environment = var.environment
   }
 }
@@ -164,7 +164,7 @@ resource "aws_iam_role_policy_attachment" "ecs_execution" {
 }
 
 resource "aws_iam_role" "ecs_task" {
-  name = "${var.environment}-brain-storm-ecs-task-role"
+  name = "${var.environment}-scoopdope-ecs-task-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -178,7 +178,7 @@ resource "aws_iam_role" "ecs_task" {
   })
 
   tags = {
-    Name        = "${var.environment}-brain-storm-ecs-task-role"
+    Name        = "${var.environment}-scoopdope-ecs-task-role"
     Environment = var.environment
   }
 }
@@ -186,7 +186,7 @@ resource "aws_iam_role" "ecs_task" {
 data "aws_region" "current" {}
 
 resource "aws_ecs_task_definition" "frontend" {
-  family                   = "${var.environment}-brain-storm-frontend"
+  family                   = "${var.environment}-scoopdope-frontend"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = "256"
@@ -226,13 +226,13 @@ resource "aws_ecs_task_definition" "frontend" {
   }])
 
   tags = {
-    Name        = "${var.environment}-brain-storm-frontend-task"
+    Name        = "${var.environment}-scoopdope-frontend-task"
     Environment = var.environment
   }
 }
 
 resource "aws_ecs_service" "frontend" {
-  name            = "${var.environment}-brain-storm-frontend"
+  name            = "${var.environment}-scoopdope-frontend"
   cluster         = aws_ecs_cluster.main.id
   task_definition = aws_ecs_task_definition.frontend.arn
   desired_count   = 2
@@ -254,7 +254,7 @@ resource "aws_ecs_service" "frontend" {
 }
 
 resource "aws_security_group" "ecs_frontend" {
-  name        = "${var.environment}-brain-storm-ecs-frontend-sg"
+  name        = "${var.environment}-scoopdope-ecs-frontend-sg"
   description = "Security group for ECS frontend tasks"
   vpc_id      = var.vpc_id
 
@@ -273,13 +273,13 @@ resource "aws_security_group" "ecs_frontend" {
   }
 
   tags = {
-    Name        = "${var.environment}-brain-storm-ecs-frontend-sg"
+    Name        = "${var.environment}-scoopdope-ecs-frontend-sg"
     Environment = var.environment
   }
 }
 
 resource "aws_lb_target_group" "frontend" {
-  name        = "${var.environment}-brain-storm-frontend-tg"
+  name        = "${var.environment}-scoopdope-frontend-tg"
   port        = 3001
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
@@ -294,17 +294,17 @@ resource "aws_lb_target_group" "frontend" {
   }
 
   tags = {
-    Name        = "${var.environment}-brain-storm-frontend-tg"
+    Name        = "${var.environment}-scoopdope-frontend-tg"
     Environment = var.environment
   }
 }
 
 resource "aws_cloudwatch_log_group" "frontend" {
-  name              = "/ecs/${var.environment}-brain-storm-frontend"
+  name              = "/ecs/${var.environment}-scoopdope-frontend"
   retention_in_days = 7
 
   tags = {
-    Name        = "${var.environment}-brain-storm-frontend-logs"
+    Name        = "${var.environment}-scoopdope-frontend-logs"
     Environment = var.environment
   }
 }

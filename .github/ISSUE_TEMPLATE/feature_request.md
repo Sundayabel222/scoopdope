@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Suggest an idea or improvement for Brain-Storm
+about: Suggest an idea or improvement for scoopdope
 title: 'feat: '
 labels: 'enhancement'
 assignees: ''

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Brain-Storm uses environment-aware CORS configuration. In **production**, only explicitly allowed origins are permitted. In **development**, all origins are allowed for convenience.
+scoopdope uses environment-aware CORS configuration. In **production**, only explicitly allowed origins are permitted. In **development**, all origins are allowed for convenience.
 
 ## Configuration
 
@@ -16,7 +16,7 @@ Set these environment variables:
 
 ### Example (production)
 ```env
-CORS_ORIGINS=https://app.brainstorm.io,https://www.brainstorm.io
+CORS_ORIGINS=https://app.Scoopdope.io,https://www.Scoopdope.io
 CORS_CREDENTIALS=true
 CORS_MAX_AGE=86400
 ```

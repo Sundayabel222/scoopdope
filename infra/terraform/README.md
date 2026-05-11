@@ -1,6 +1,6 @@
-# Brain Storm - Terraform Infrastructure
+# Scoopdope - Terraform Infrastructure
 
-This directory contains Terraform configurations for deploying Brain Storm to AWS.
+This directory contains Terraform configurations for deploying Scoopdope to AWS.
 
 ## Architecture
 
@@ -14,24 +14,24 @@ This directory contains Terraform configurations for deploying Brain Storm to AW
 
 - Terraform >= 1.0
 - AWS CLI configured with appropriate credentials
-- S3 bucket for remote state: `brain-storm-terraform-state`
-- DynamoDB table for state locking: `brain-storm-terraform-locks`
+- S3 bucket for remote state: `scoopdope-terraform-state`
+- DynamoDB table for state locking: `scoopdope-terraform-locks`
 
 ## Setup Remote State
 
 ```bash
 # Create S3 bucket for state
 aws s3api create-bucket \
-  --bucket brain-storm-terraform-state \
+  --bucket scoopdope-terraform-state \
   --region us-east-1
 
 aws s3api put-bucket-versioning \
-  --bucket brain-storm-terraform-state \
+  --bucket scoopdope-terraform-state \
   --versioning-configuration Status=Enabled
 
 # Create DynamoDB table for locking
 aws dynamodb create-table \
-  --table-name brain-storm-terraform-locks \
+  --table-name scoopdope-terraform-locks \
   --attribute-definitions AttributeName=LockID,AttributeType=S \
   --key-schema AttributeName=LockID,KeyType=HASH \
   --billing-mode PAY_PER_REQUEST \

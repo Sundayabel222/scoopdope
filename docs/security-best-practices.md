@@ -1,6 +1,6 @@
 # Security Best Practices
 
-Security guidelines for contributors and operators of the Brain-Storm platform.
+Security guidelines for contributors and operators of the scoopdope platform.
 
 ---
 
@@ -18,7 +18,7 @@ Security guidelines for contributors and operators of the Brain-Storm platform.
 
 ### JWT Authentication
 
-Brain-Storm uses JWT (JSON Web Tokens) via `@nestjs/passport` and `passport-jwt`.
+scoopdope uses JWT (JSON Web Tokens) via `@nestjs/passport` and `passport-jwt`.
 
 **Best practices:**
 

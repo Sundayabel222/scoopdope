@@ -1,5 +1,5 @@
 resource "aws_security_group" "alb" {
-  name        = "${var.environment}-brain-storm-alb-sg"
+  name        = "${var.environment}-scoopdope-alb-sg"
   description = "Security group for Application Load Balancer"
   vpc_id      = var.vpc_id
 
@@ -25,13 +25,13 @@ resource "aws_security_group" "alb" {
   }
 
   tags = {
-    Name        = "${var.environment}-brain-storm-alb-sg"
+    Name        = "${var.environment}-scoopdope-alb-sg"
     Environment = var.environment
   }
 }
 
 resource "aws_lb" "main" {
-  name               = "${var.environment}-brain-storm-alb"
+  name               = "${var.environment}-scoopdope-alb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb.id]
@@ -40,7 +40,7 @@ resource "aws_lb" "main" {
   enable_deletion_protection = var.environment == "prod"
 
   tags = {
-    Name        = "${var.environment}-brain-storm-alb"
+    Name        = "${var.environment}-scoopdope-alb"
     Environment = var.environment
   }
 }

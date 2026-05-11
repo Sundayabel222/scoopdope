@@ -55,7 +55,7 @@ jobs:
 
     environment:
       name: blue-green-deployment-production
-      url: https://api.brain-storm.example.com
+      url: https://api.scoopdope.example.com
 
     steps:
       - name: Approval requested
@@ -79,7 +79,7 @@ jobs:
         run: |
           # Query current active environment (blue or green)
           # This would typically query your infrastructure (ECS, K8s, etc.)
-          ACTIVE_ENV=$(curl -s https://api.brain-storm.example.com/health/environment || echo "blue")
+          ACTIVE_ENV=$(curl -s https://api.scoopdope.example.com/health/environment || echo "blue")
           
           if [ "$ACTIVE_ENV" = "blue" ]; then
             echo "active=blue" >> $GITHUB_OUTPUT
@@ -103,7 +103,7 @@ jobs:
 
     environment:
       name: ${{ github.event.inputs.environment }}
-      url: https://api.brain-storm.example.com
+      url: https://api.scoopdope.example.com
 
     steps:
       - name: Checkout
@@ -128,7 +128,7 @@ jobs:
           # Example ECS deployment
           aws ecs update-service \
             --cluster "${{ github.event.inputs.environment }}-cluster" \
-            --service "brain-storm-backend-$ENVIRONMENT" \
+            --service "scoopdope-backend-$ENVIRONMENT" \
             --force-new-deployment \
             --region ${{ secrets.AWS_REGION }} || {
             echo "❌ Deployment failed"
@@ -148,14 +148,14 @@ jobs:
           while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
             TASK_COUNT=$(aws ecs describe-services \
               --cluster "${{ github.event.inputs.environment }}-cluster" \
-              --services "brain-storm-backend-$ENVIRONMENT" \
+              --services "scoopdope-backend-$ENVIRONMENT" \
               --region ${{ secrets.AWS_REGION }} \
               --query 'services[0].runningCount' \
               --output text)
             
             DESIRED_COUNT=$(aws ecs describe-services \
               --cluster "${{ github.event.inputs.environment }}-cluster" \
-              --services "brain-storm-backend-$ENVIRONMENT" \
+              --services "scoopdope-backend-$ENVIRONMENT" \
               --region ${{ secrets.AWS_REGION }} \
               --query 'services[0].desiredCount' \
               --output text)
@@ -185,7 +185,7 @@ jobs:
         id: health
         run: |
           ENVIRONMENT="${{ needs.get-current-environment.outputs.inactive-env }}"
-          HEALTH_URL="https://$ENVIRONMENT-api.brain-storm.example.com/health"
+          HEALTH_URL="https://$ENVIRONMENT-api.scoopdope.example.com/health"
           
           echo "🔍 Running health checks on $ENVIRONMENT environment..."
           
@@ -205,7 +205,7 @@ jobs:
       - name: Run smoke tests
         run: |
           ENVIRONMENT="${{ needs.get-current-environment.outputs.inactive-env }}"
-          API_URL="https://$ENVIRONMENT-api.brain-storm.example.com"
+          API_URL="https://$ENVIRONMENT-api.scoopdope.example.com"
           
           echo "🧪 Running smoke tests..."
           
@@ -257,10 +257,10 @@ jobs:
               \"Changes\": [{
                 \"Action\": \"UPSERT\",
                 \"ResourceRecordSet\": {
-                  \"Name\": \"api.brain-storm.example.com\",
+                  \"Name\": \"api.scoopdope.example.com\",
                   \"Type\": \"CNAME\",
                   \"TTL\": 60,
-                  \"ResourceRecords\": [{\"Value\": \"$NEW_ACTIVE-api.brain-storm.example.com\"}]
+                  \"ResourceRecords\": [{\"Value\": \"$NEW_ACTIVE-api.scoopdope.example.com\"}]
                 }
               }]
             }" \
@@ -275,7 +275,7 @@ jobs:
           sleep 10
           
           for i in {1..10}; do
-            if curl -sf https://api.brain-storm.example.com/health; then
+            if curl -sf https://api.scoopdope.example.com/health; then
               echo "✅ Traffic switch verified"
               exit 0
             fi
@@ -301,7 +301,7 @@ jobs:
           
           for i in {1..30}; do
             # Check error rates, latency, etc.
-            ERROR_RATE=$(curl -s https://api.brain-storm.example.com/metrics | grep -oP 'error_rate \K[0-9.]+' || echo "0")
+            ERROR_RATE=$(curl -s https://api.scoopdope.example.com/metrics | grep -oP 'error_rate \K[0-9.]+' || echo "0")
             
             if (( $(echo "$ERROR_RATE > 5" | bc -l) )); then
               echo "⚠️ High error rate detected: $ERROR_RATE%"
@@ -347,10 +347,10 @@ jobs:
               \"Changes\": [{
                 \"Action\": \"UPSERT\",
                 \"ResourceRecordSet\": {
-                  \"Name\": \"api.brain-storm.example.com\",
+                  \"Name\": \"api.scoopdope.example.com\",
                   \"Type\": \"CNAME\",
                   \"TTL\": 60,
-                  \"ResourceRecords\": [{\"Value\": \"$PREVIOUS_ACTIVE-api.brain-storm.example.com\"}]
+                  \"ResourceRecords\": [{\"Value\": \"$PREVIOUS_ACTIVE-api.scoopdope.example.com\"}]
                 }
               }]
             }" \

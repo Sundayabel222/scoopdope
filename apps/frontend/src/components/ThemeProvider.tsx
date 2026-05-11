@@ -8,7 +8,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       attribute="class"
       defaultTheme="system"
       enableSystem
-      storageKey="brainstorm-theme"
+      storageKey="Scoopdope-theme"
     >
       {children}
     </NextThemesProvider>

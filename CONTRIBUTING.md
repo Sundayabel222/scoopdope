@@ -1,6 +1,6 @@
-# Contributing to Brain-Storm
+# Contributing to scoopdope
 
-Thank you for your interest in contributing to Brain-Storm! We welcome contributions from the community to help make blockchain education accessible to everyone.
+Thank you for your interest in contributing to scoopdope! We welcome contributions from the community to help make blockchain education accessible to everyone.
 
 ## Code of Conduct
 
@@ -9,7 +9,7 @@ All contributors are expected to follow our [Code of Conduct](CODE_OF_CONDUCT.md
 ## Getting Started
 
 1. **Fork the repository** on GitHub.
-2. **Clone your fork** locally: `git clone https://github.com/<your-username>/Brain-Storm.git`
+2. **Clone your fork** locally: `git clone https://github.com/<your-username>/scoopdope.git`
 3. **Follow the [Developer Setup Guide](docs/development-setup.md)** to set up your environment.
 4. **Create a new branch** from `main` for your change (see naming conventions below).
 5. Make your changes, add tests, and open a pull request.

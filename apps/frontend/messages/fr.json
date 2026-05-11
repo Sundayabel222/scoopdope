@@ -1,6 +1,6 @@
 {
   "nav": {
-    "brand": "Brain-Storm",
+    "brand": "scoopdope",
     "courses": "Cours",
     "dashboard": "Tableau de bord",
     "credentials": "Diplômes",
@@ -17,7 +17,7 @@
     "bookmarks": "Favoris"
   },
   "home": {
-    "title": "Brain-Storm",
+    "title": "scoopdope",
     "description": "Plateforme d'éducation blockchain sur le réseau Stellar. Gagnez des diplômes vérifiables en apprenant.",
     "browseCourses": "Parcourir les cours",
     "getStarted": "Commencer"

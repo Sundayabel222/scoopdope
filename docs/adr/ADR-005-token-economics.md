@@ -1,4 +1,4 @@
-# ADR-005: Brain-Storm Token (BST) Economics
+# ADR-005: scoopdope Token (BST) Economics
 
 ## Status
 
@@ -6,7 +6,7 @@ Accepted
 
 ## Context
 
-Brain-Storm rewards learners and instructors with a native utility token (BST) issued on the Stellar network via a Soroban smart contract. Before deploying to mainnet we needed to formalise the economic model, covering:
+scoopdope rewards learners and instructors with a native utility token (BST) issued on the Stellar network via a Soroban smart contract. Before deploying to mainnet we needed to formalise the economic model, covering:
 
 - How many tokens exist and who controls issuance
 - How rewards are calculated and distributed per learning activity
@@ -24,7 +24,7 @@ We adopt the following token economics for BST:
 
 | Parameter | Value |
 |---|---|
-| Name | Brain-Storm Token |
+| Name | scoopdope Token |
 | Symbol | BST |
 | Decimals | 7 |
 | Max supply | 1,000,000,000 BST (1 billion) |

@@ -7,7 +7,7 @@ export function Footer() {
   return (
     <footer className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 mt-auto">
       <div className="max-w-5xl mx-auto px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500 dark:text-gray-400">
-        <span>© {year} Brain-Storm. All rights reserved.</span>
+        <span>© {year} scoopdope. All rights reserved.</span>
         <nav
           aria-label="Footer navigation"
           className="flex items-center gap-4 flex-wrap justify-center"
@@ -19,7 +19,7 @@ export function Footer() {
             Docs
           </Link>
           <a
-            href="https://github.com/your-org/brain-storm"
+            href="https://github.com/your-org/scoopdope"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-gray-900 dark:hover:text-white transition-colors"

@@ -30,7 +30,7 @@ jobs:
 
     environment:
       name: production
-      url: https://api.brain-storm.example.com
+      url: https://api.scoopdope.example.com
 ```
 
 ```yaml
@@ -67,7 +67,7 @@ With:
   uses: aws-actions/configure-aws-credentials@v4
   with:
     role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-    role-session-name: GitHubActions-BrainStorm-Production  # or -Rollback for rollback job
+    role-session-name: GitHubActions-Scoopdope-Production  # or -Rollback for rollback job
     aws-region: ${{ secrets.AWS_REGION }}
 ```
 

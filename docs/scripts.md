@@ -1,8 +1,8 @@
-# Brain-Storm Scripts Documentation
+# scoopdope Scripts Documentation
 
 ## Overview
 
-This directory contains build, deployment, and contract interaction scripts for the Brain-Storm platform.
+This directory contains build, deployment, and contract interaction scripts for the scoopdope platform.
 
 ## Scripts
 
@@ -23,7 +23,7 @@ Builds all Soroban smart contracts in the `contracts/` directory.
 
 **Output:**
 ```
-Building Brain-Storm smart contracts...
+Building scoopdope smart contracts...
 Building analytics...
 Building token...
 Building shared...

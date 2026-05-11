@@ -1,6 +1,6 @@
 # Smart Contract Upgrade Guide
 
-This guide covers the full lifecycle of upgrading Brain-Storm's Soroban smart contracts: from understanding the upgrade mechanism, through testing and governance approval, to executing the upgrade and rolling back if needed.
+This guide covers the full lifecycle of upgrading scoopdope's Soroban smart contracts: from understanding the upgrade mechanism, through testing and governance approval, to executing the upgrade and rolling back if needed.
 
 ---
 

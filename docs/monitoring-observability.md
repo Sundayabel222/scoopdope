@@ -1,6 +1,6 @@
 # Monitoring & Observability Guide
 
-Brain-Storm uses a three-pillar observability stack: **Prometheus + Grafana** for metrics, **Winston** for structured logging, and **Sentry** for error tracking and performance profiling.
+scoopdope uses a three-pillar observability stack: **Prometheus + Grafana** for metrics, **Winston** for structured logging, and **Sentry** for error tracking and performance profiling.
 
 ---
 
@@ -190,7 +190,7 @@ For production deployments where the backend is not on `host.docker.internal`, u
 
 ```yaml
 scrape_configs:
-  - job_name: 'brain-storm-backend'
+  - job_name: 'scoopdope-backend'
     static_configs:
       - targets: ['backend:3000']   # Docker service name
     metrics_path: '/metrics'
@@ -259,7 +259,7 @@ All logs go to **stdout** — the standard for containerised workloads. Plug in 
 {
   "logDriver": "awslogs",
   "options": {
-    "awslogs-group": "/brain-storm/backend",
+    "awslogs-group": "/scoopdope/backend",
     "awslogs-region": "us-east-1",
     "awslogs-stream-prefix": "backend"
   }
@@ -282,7 +282,7 @@ promtail:
 
 Then add Loki as a datasource in Grafana and use LogQL to query:
 ```logql
-{container="brain-storm-backend"} | json | level="error"
+{container="scoopdope-backend"} | json | level="error"
 ```
 
 **Kubernetes:**
@@ -406,7 +406,7 @@ Add these rules to `infra/monitoring/prometheus.yml` under an `alerting` + `rule
 ```yaml
 # infra/monitoring/alerts.yml
 groups:
-  - name: brain-storm-backend
+  - name: scoopdope-backend
     rules:
 
       # High 5xx error rate
@@ -451,7 +451,7 @@ groups:
 
       # Backend down (no scrape data)
       - alert: BackendDown
-        expr: up{job="brain-storm-backend"} == 0
+        expr: up{job="scoopdope-backend"} == 0
         for: 1m
         labels:
           severity: critical

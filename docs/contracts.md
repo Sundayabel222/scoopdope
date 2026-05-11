@@ -1,6 +1,6 @@
 # Smart Contracts Interaction Guide
 
-This guide covers all deployed Soroban smart contracts on the Stellar network for the Brain-Storm platform.
+This guide covers all deployed Soroban smart contracts on the Stellar network for the scoopdope platform.
 
 ---
 
@@ -62,7 +62,7 @@ stellar contract invoke \
   --admin <ADMIN_ADDRESS> \
   --recipient <STUDENT_ADDRESS> \
   --course_id RUST101 \
-  --metadata_url "https://api.brain-storm.com/v1/certs/1"
+  --metadata_url "https://api.scoopdope.com/v1/certs/1"
 
 # Read a certificate
 stellar contract invoke \
@@ -85,7 +85,7 @@ stellar contract invoke \
 
 ## Token Contract (BST)
 
-Brain-Storm Token (BST) — SEP-0041 compatible token with instructor vesting.
+scoopdope Token (BST) — SEP-0041 compatible token with instructor vesting.
 
 ### Function Signatures
 
@@ -380,7 +380,7 @@ Student dashboard: GET /v1/credentials/:userId  ──► shows new certificate
 
 ```bash
 # Via API
-curl https://api.brain-storm.com/v1/credentials/verify/<TX_HASH>
+curl https://api.scoopdope.com/v1/credentials/verify/<TX_HASH>
 
 # Via Stellar CLI
 stellar tx fetch --hash <TX_HASH> --network testnet

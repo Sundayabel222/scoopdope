@@ -1,6 +1,6 @@
 # Troubleshooting Guide
 
-Common issues and solutions for developers and operators running Brain-Storm.
+Common issues and solutions for developers and operators running scoopdope.
 
 ---
 
@@ -19,7 +19,7 @@ DATABASE_HOST=localhost   # use 'postgres' inside Docker
 DATABASE_PORT=5432
 DATABASE_USERNAME=postgres
 DATABASE_PASSWORD=postgres
-DATABASE_NAME=brain-storm
+DATABASE_NAME=scoopdope
 ```
 
 ### `Error: connect ECONNREFUSED 127.0.0.1:6379`

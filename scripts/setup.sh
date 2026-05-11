@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-echo "🚀 Brain-Storm — automated local setup"
+echo "🚀 scoopdope — automated local setup"
 echo "======================================="
 
 # ── Helpers ──────────────────────────────────────────────────────────────────

@@ -1,8 +1,8 @@
 {
   "dashboard": {
-    "title": "Brain Storm - NestJS Metrics",
-    "uid": "brainstorm-nestjs",
-    "tags": ["nestjs", "brain-storm"],
+    "title": "Scoopdope - NestJS Metrics",
+    "uid": "Scoopdope-nestjs",
+    "tags": ["nestjs", "scoopdope"],
     "timezone": "browser",
     "refresh": "30s",
     "time": { "from": "now-1h", "to": "now" },

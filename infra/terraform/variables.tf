@@ -18,7 +18,7 @@ variable "vpc_cidr" {
 variable "db_name" {
   description = "Database name"
   type        = string
-  default     = "brainstorm"
+  default     = "Scoopdope"
 }
 
 variable "db_username" {
@@ -63,5 +63,5 @@ variable "github_org" {
 variable "github_repo" {
   description = "GitHub repository name"
   type        = string
-  default     = "Brain-Storm"
+  default     = "scoopdope"
 }

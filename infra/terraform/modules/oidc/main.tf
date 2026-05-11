@@ -38,7 +38,7 @@ resource "aws_iam_role" "github_actions" {
 }
 
 resource "aws_iam_role_policy" "github_actions_deploy" {
-  name = "BrainStormDeployPolicy"
+  name = "ScoopdopeDeployPolicy"
   role = aws_iam_role.github_actions.id
 
   policy = jsonencode({
@@ -70,15 +70,15 @@ resource "aws_iam_role_policy" "github_actions_deploy" {
           "ecs:RegisterTaskDefinition"
         ]
         Resource = [
-          "arn:aws:ecs:*:${data.aws_caller_identity.current.account_id}:service/prod-brain-storm-cluster/*",
-          "arn:aws:ecs:*:${data.aws_caller_identity.current.account_id}:task-definition/prod-brain-storm-*"
+          "arn:aws:ecs:*:${data.aws_caller_identity.current.account_id}:service/prod-scoopdope-cluster/*",
+          "arn:aws:ecs:*:${data.aws_caller_identity.current.account_id}:task-definition/prod-scoopdope-*"
         ]
       },
       {
         Sid      = "PassRoleToECS"
         Effect   = "Allow"
         Action   = "iam:PassRole"
-        Resource = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/prod-brain-storm-ecs-*"
+        Resource = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/prod-scoopdope-ecs-*"
         Condition = {
           StringEquals = {
             "iam:PassedToService" = "ecs-tasks.amazonaws.com"
@@ -95,8 +95,8 @@ resource "aws_iam_role_policy" "github_actions_deploy" {
           "s3:ListBucket"
         ]
         Resource = [
-          "arn:aws:s3:::brain-storm-terraform-state",
-          "arn:aws:s3:::brain-storm-terraform-state/*"
+          "arn:aws:s3:::scoopdope-terraform-state",
+          "arn:aws:s3:::scoopdope-terraform-state/*"
         ]
       },
       {
@@ -107,7 +107,7 @@ resource "aws_iam_role_policy" "github_actions_deploy" {
           "dynamodb:PutItem",
           "dynamodb:DeleteItem"
         ]
-        Resource = "arn:aws:dynamodb:*:${data.aws_caller_identity.current.account_id}:table/brain-storm-terraform-locks"
+        Resource = "arn:aws:dynamodb:*:${data.aws_caller_identity.current.account_id}:table/scoopdope-terraform-locks"
       },
       {
         Sid    = "CloudWatchLogs"
@@ -117,7 +117,7 @@ resource "aws_iam_role_policy" "github_actions_deploy" {
           "logs:CreateLogStream",
           "logs:PutLogEvents"
         ]
-        Resource = "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:/ecs/prod-brain-storm-*"
+        Resource = "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:/ecs/prod-scoopdope-*"
       }
     ]
   })

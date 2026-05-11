@@ -4,7 +4,7 @@ resource "aws_vpc" "main" {
   enable_dns_support   = true
 
   tags = {
-    Name        = "${var.environment}-brain-storm-vpc"
+    Name        = "${var.environment}-scoopdope-vpc"
     Environment = var.environment
   }
 }
@@ -13,7 +13,7 @@ resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name        = "${var.environment}-brain-storm-igw"
+    Name        = "${var.environment}-scoopdope-igw"
     Environment = var.environment
   }
 }
@@ -26,7 +26,7 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name        = "${var.environment}-brain-storm-public-${count.index + 1}"
+    Name        = "${var.environment}-scoopdope-public-${count.index + 1}"
     Environment = var.environment
   }
 }
@@ -38,7 +38,7 @@ resource "aws_subnet" "private" {
   availability_zone = data.aws_availability_zones.available.names[count.index]
 
   tags = {
-    Name        = "${var.environment}-brain-storm-private-${count.index + 1}"
+    Name        = "${var.environment}-scoopdope-private-${count.index + 1}"
     Environment = var.environment
   }
 }
@@ -48,7 +48,7 @@ resource "aws_eip" "nat" {
   domain = "vpc"
 
   tags = {
-    Name        = "${var.environment}-brain-storm-nat-eip-${count.index + 1}"
+    Name        = "${var.environment}-scoopdope-nat-eip-${count.index + 1}"
     Environment = var.environment
   }
 }
@@ -59,7 +59,7 @@ resource "aws_nat_gateway" "main" {
   subnet_id     = aws_subnet.public[count.index].id
 
   tags = {
-    Name        = "${var.environment}-brain-storm-nat-${count.index + 1}"
+    Name        = "${var.environment}-scoopdope-nat-${count.index + 1}"
     Environment = var.environment
   }
 }
@@ -73,7 +73,7 @@ resource "aws_route_table" "public" {
   }
 
   tags = {
-    Name        = "${var.environment}-brain-storm-public-rt"
+    Name        = "${var.environment}-scoopdope-public-rt"
     Environment = var.environment
   }
 }
@@ -88,7 +88,7 @@ resource "aws_route_table" "private" {
   }
 
   tags = {
-    Name        = "${var.environment}-brain-storm-private-rt-${count.index + 1}"
+    Name        = "${var.environment}-scoopdope-private-rt-${count.index + 1}"
     Environment = var.environment
   }
 }

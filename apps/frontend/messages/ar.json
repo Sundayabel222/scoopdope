@@ -1,6 +1,6 @@
 {
   "nav": {
-    "brand": "Brain-Storm",
+    "brand": "scoopdope",
     "courses": "الدورات",
     "dashboard": "لوحة التحكم",
     "credentials": "الشهادات",
@@ -17,7 +17,7 @@
     "bookmarks": "المفضلة"
   },
   "home": {
-    "title": "Brain-Storm",
+    "title": "scoopdope",
     "description": "منصة تعليمية للبلوكتشين مبنية على شبكة Stellar. اكسب شهادات موثقة على السلسلة أثناء تعلمك.",
     "browseCourses": "تصفح الدورات",
     "getStarted": "ابدأ الآن"

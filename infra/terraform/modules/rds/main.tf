@@ -1,15 +1,15 @@
 resource "aws_db_subnet_group" "main" {
-  name       = "${var.environment}-brain-storm-db-subnet"
+  name       = "${var.environment}-scoopdope-db-subnet"
   subnet_ids = var.private_subnet_ids
 
   tags = {
-    Name        = "${var.environment}-brain-storm-db-subnet"
+    Name        = "${var.environment}-scoopdope-db-subnet"
     Environment = var.environment
   }
 }
 
 resource "aws_security_group" "rds" {
-  name        = "${var.environment}-brain-storm-rds-sg"
+  name        = "${var.environment}-scoopdope-rds-sg"
   description = "Security group for RDS PostgreSQL"
   vpc_id      = var.vpc_id
 
@@ -28,13 +28,13 @@ resource "aws_security_group" "rds" {
   }
 
   tags = {
-    Name        = "${var.environment}-brain-storm-rds-sg"
+    Name        = "${var.environment}-scoopdope-rds-sg"
     Environment = var.environment
   }
 }
 
 resource "aws_db_instance" "main" {
-  identifier     = "${var.environment}-brain-storm-db"
+  identifier     = "${var.environment}-scoopdope-db"
   engine         = "postgres"
   engine_version = "16.1"
   instance_class = var.db_instance_class
@@ -55,10 +55,10 @@ resource "aws_db_instance" "main" {
   maintenance_window      = "mon:04:00-mon:05:00"
 
   skip_final_snapshot       = var.environment != "prod"
-  final_snapshot_identifier = "${var.environment}-brain-storm-db-final-snapshot"
+  final_snapshot_identifier = "${var.environment}-scoopdope-db-final-snapshot"
 
   tags = {
-    Name        = "${var.environment}-brain-storm-db"
+    Name        = "${var.environment}-scoopdope-db"
     Environment = var.environment
   }
 }

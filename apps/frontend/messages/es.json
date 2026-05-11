@@ -1,6 +1,6 @@
 {
   "nav": {
-    "brand": "Brain-Storm",
+    "brand": "scoopdope",
     "courses": "Cursos",
     "dashboard": "Panel",
     "credentials": "Credenciales",
@@ -16,7 +16,7 @@
     "siteNav": "Navegación del sitio"
   },
   "home": {
-    "title": "Brain-Storm",
+    "title": "scoopdope",
     "description": "Plataforma de educación blockchain construida sobre la red Stellar. Gana credenciales verificables en cadena mientras aprendes.",
     "browseCourses": "Ver Cursos",
     "getStarted": "Comenzar"

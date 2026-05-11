@@ -1,12 +1,12 @@
 /**
- * @brain-storm/types
+ * @scoopdope/types
  *
- * Shared TypeScript types, DTOs and interfaces for the Brain-Storm platform.
- * Consumed by both `@brain-storm/frontend` and `@brain-storm/backend`.
+ * Shared TypeScript types, DTOs and interfaces for the scoopdope platform.
+ * Consumed by both `@scoopdope/frontend` and `@scoopdope/backend`.
  *
  * @example
  * ```ts
- * import type { CreateCourseDto, UserProfile, PaginatedResponse } from '@brain-storm/types';
+ * import type { CreateCourseDto, UserProfile, PaginatedResponse } from '@scoopdope/types';
  * ```
  */
 

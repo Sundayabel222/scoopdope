@@ -94,7 +94,7 @@ export function DynamicScript() {
 ### Check CSP Headers
 
 ```bash
-curl -I https://brain-storm.example.com
+curl -I https://scoopdope.example.com
 # Look for Content-Security-Policy header
 ```
 

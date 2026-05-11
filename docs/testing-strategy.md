@@ -1,6 +1,6 @@
 # Testing Strategy
 
-Comprehensive guide to the testing approach across the Brain-Storm platform.
+Comprehensive guide to the testing approach across the scoopdope platform.
 
 ---
 
@@ -17,7 +17,7 @@ Comprehensive guide to the testing approach across the Brain-Storm platform.
 
 ## 1. Overview
 
-Brain-Storm uses a layered testing strategy across three application layers:
+scoopdope uses a layered testing strategy across three application layers:
 
 | Layer | Framework | Test Types |
 |---|---|---|
@@ -234,8 +234,8 @@ Located in `apps/frontend/src/__tests__/api/*.pact.test.ts`.
 ```typescript
 // auth.pact.test.ts
 const pact = new PactV3({
-  consumer: 'BrainStorm-Frontend',
-  provider: 'BrainStorm-Backend',
+  consumer: 'Scoopdope-Frontend',
+  provider: 'Scoopdope-Backend',
   dir: './pacts',
 });
 
@@ -272,7 +272,7 @@ Located in `apps/backend/test/pact.provider.spec.ts`. Boots the full NestJS app 
 
 ```typescript
 const verifier = new Verifier({
-  provider: 'BrainStorm-Backend',
+  provider: 'Scoopdope-Backend',
   providerBaseUrl: 'http://localhost:3000',
   pactFiles: [path.resolve(__dirname, '../../pacts')],
   stateHandlers: {

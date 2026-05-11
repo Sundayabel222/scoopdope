@@ -1,6 +1,6 @@
 # Notifications Guide
 
-Comprehensive guide to the Brain-Storm notification system.
+Comprehensive guide to the scoopdope notification system.
 
 ---
 

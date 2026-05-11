@@ -1,8 +1,8 @@
 # Database Schema Documentation
 
-PostgreSQL database for the Brain-Storm backend. Managed via TypeORM with explicit migrations (`synchronize: false` in all environments).
+PostgreSQL database for the scoopdope backend. Managed via TypeORM with explicit migrations (`synchronize: false` in all environments).
 
-**Database:** `brain-storm` (default)  
+**Database:** `scoopdope` (default)  
 **ORM:** TypeORM  
 **Migration runner:** `npm run typeorm:run` — see [migrations.md](./migrations.md) for workflow details.
 

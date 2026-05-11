@@ -24,7 +24,7 @@ beforeEach(() => useAuthStore.setState({ user: null, token: null }));
 describe('Navbar', () => {
   it('renders the brand link', () => {
     render(<Navbar />);
-    expect(screen.getByRole('link', { name: 'Brain-Storm' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'scoopdope' })).toBeInTheDocument();
   });
 
   it('renders Courses link', () => {

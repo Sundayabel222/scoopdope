@@ -1,6 +1,6 @@
 # Environment Variables Reference
 
-Complete reference for all environment variables used across the Brain-Storm platform.
+Complete reference for all environment variables used across the scoopdope platform.
 
 > **Quick start:** Copy the root `.env.example` to `.env` and fill in the required values before running any service.
 
@@ -63,10 +63,10 @@ Consumed by `apps/backend`. Set these in the root `.env` (or `apps/backend/.env`
 | `DATABASE_PORT` | ⚙️ Optional | `5432` | PostgreSQL port. |
 | `DATABASE_USER` | ✅ Required | — | PostgreSQL login role. |
 | `DATABASE_PASSWORD` | ✅ Required 🔒 | — | Password for `DATABASE_USER`. |
-| `DATABASE_NAME` | ✅ Required | — | Name of the database to connect to (default in Docker: `brain-storm`). |
+| `DATABASE_NAME` | ✅ Required | — | Name of the database to connect to (default in Docker: `scoopdope`). |
 | `DATABASE_URL` | ⚙️ Optional | — | Full PostgreSQL connection string (e.g. `postgresql://user:pass@host:5432/db`). Used in CI security-scan jobs as a convenience alternative to the individual `DATABASE_*` variables. When set, individual variables are ignored by that job. |
 
-> **Docker Compose note:** `docker-compose.yml` hard-codes `DATABASE_HOST=postgres`, `DATABASE_USER=brain-storm`, and `DATABASE_PASSWORD=brain-storm` for local development. Override these in `.env` for staging/production.
+> **Docker Compose note:** `docker-compose.yml` hard-codes `DATABASE_HOST=postgres`, `DATABASE_USER=scoopdope`, and `DATABASE_PASSWORD=scoopdope` for local development. Override these in `.env` for staging/production.
 
 ### Authentication
 
@@ -114,7 +114,7 @@ Consumed by `apps/backend`. Set these in the root `.env` (or `apps/backend/.env`
 | `EMAIL_SECURE` | ⚙️ Optional | `false` | Set to `true` to use TLS from the start of the connection (port 465). Leave `false` for STARTTLS (port 587). |
 | `EMAIL_USER` | ✅ Required* | — | SMTP authentication username. *Required when `EMAIL_ENABLED=true`. |
 | `EMAIL_PASS` | ✅ Required* 🔒 | — | SMTP authentication password or API key. *Required when `EMAIL_ENABLED=true`. |
-| `EMAIL_FROM` | ⚙️ Optional | `"Brain Storm" <no-reply@brainstorm.app>` | Sender address shown in outgoing emails. Use RFC 5322 format. |
+| `EMAIL_FROM` | ⚙️ Optional | `"Scoopdope" <no-reply@Scoopdope.app>` | Sender address shown in outgoing emails. Use RFC 5322 format. |
 | `FRONTEND_URL` | ⚙️ Optional | `http://localhost:3001` | Base URL of the frontend application. Embedded in email links (e.g. password-reset URLs). |
 
 ### Rate Limiting
@@ -187,9 +187,9 @@ LOG_LEVEL=debug
 
 DATABASE_HOST=localhost
 DATABASE_PORT=5432
-DATABASE_USER=brain-storm
-DATABASE_PASSWORD=brain-storm
-DATABASE_NAME=brain-storm
+DATABASE_USER=scoopdope
+DATABASE_PASSWORD=scoopdope
+DATABASE_NAME=scoopdope
 
 JWT_SECRET=dev-only-secret-change-in-production-32chars
 
@@ -235,9 +235,9 @@ LOG_LEVEL=info
 
 DATABASE_HOST=staging-db.internal
 DATABASE_PORT=5432
-DATABASE_USER=brainstorm_staging
+DATABASE_USER=Scoopdope_staging
 DATABASE_PASSWORD=<strong-random-password>
-DATABASE_NAME=brainstorm_staging
+DATABASE_NAME=Scoopdope_staging
 
 JWT_SECRET=<random-32+-char-secret>
 
@@ -249,16 +249,16 @@ STELLAR_HORIZON_URL=https://horizon-testnet.stellar.org
 SOROBAN_RPC_URL=https://soroban-testnet.stellar.org
 ANALYTICS_CONTRACT_ID=<deployed-testnet-contract-id>
 TOKEN_CONTRACT_ID=<deployed-testnet-contract-id>
-STELLAR_WEB_AUTH_DOMAIN=staging.brain-storm.example.com
+STELLAR_WEB_AUTH_DOMAIN=staging.scoopdope.example.com
 
 EMAIL_ENABLED=true
 EMAIL_HOST=smtp.sendgrid.net
 EMAIL_PORT=587
 EMAIL_USER=apikey
 EMAIL_PASS=<sendgrid-api-key>
-EMAIL_FROM="Brain Storm Staging" <no-reply@staging.brain-storm.example.com>
+EMAIL_FROM="Scoopdope Staging" <no-reply@staging.scoopdope.example.com>
 
-FRONTEND_URL=https://staging.brain-storm.example.com
+FRONTEND_URL=https://staging.scoopdope.example.com
 THROTTLE_TTL=60000
 THROTTLE_LIMIT=200
 
@@ -269,11 +269,11 @@ KYC_PROVIDER_API_KEY=<staging-kyc-key>
 
 ```env
 # Frontend (staging)
-NEXT_PUBLIC_API_URL=https://api.staging.brain-storm.example.com
+NEXT_PUBLIC_API_URL=https://api.staging.scoopdope.example.com
 NEXT_PUBLIC_STELLAR_NETWORK=testnet
 NEXT_PUBLIC_SENTRY_DSN=https://<key>@sentry.io/<project>
 NEXT_PUBLIC_GIT_COMMIT_SHA=<git-sha>
-NEXT_PUBLIC_SITE_URL=https://staging.brain-storm.example.com
+NEXT_PUBLIC_SITE_URL=https://staging.scoopdope.example.com
 ```
 
 ### Production
@@ -285,9 +285,9 @@ LOG_LEVEL=warn
 
 DATABASE_HOST=prod-db.internal
 DATABASE_PORT=5432
-DATABASE_USER=brainstorm_prod
+DATABASE_USER=Scoopdope_prod
 DATABASE_PASSWORD=<strong-random-password>
-DATABASE_NAME=brainstorm_prod
+DATABASE_NAME=Scoopdope_prod
 
 JWT_SECRET=<random-64-char-secret>
 
@@ -299,16 +299,16 @@ STELLAR_HORIZON_URL=https://horizon.stellar.org
 SOROBAN_RPC_URL=https://soroban.stellar.org
 ANALYTICS_CONTRACT_ID=<deployed-mainnet-contract-id>
 TOKEN_CONTRACT_ID=<deployed-mainnet-contract-id>
-STELLAR_WEB_AUTH_DOMAIN=brain-storm.example.com
+STELLAR_WEB_AUTH_DOMAIN=scoopdope.example.com
 
 EMAIL_ENABLED=true
 EMAIL_HOST=smtp.sendgrid.net
 EMAIL_PORT=587
 EMAIL_USER=apikey
 EMAIL_PASS=<sendgrid-api-key>
-EMAIL_FROM="Brain Storm" <no-reply@brain-storm.example.com>
+EMAIL_FROM="Scoopdope" <no-reply@scoopdope.example.com>
 
-FRONTEND_URL=https://brain-storm.example.com
+FRONTEND_URL=https://scoopdope.example.com
 THROTTLE_TTL=60000
 THROTTLE_LIMIT=100
 
@@ -319,11 +319,11 @@ KYC_PROVIDER_API_KEY=<production-kyc-key>
 
 ```env
 # Frontend (production)
-NEXT_PUBLIC_API_URL=https://api.brain-storm.example.com
+NEXT_PUBLIC_API_URL=https://api.scoopdope.example.com
 NEXT_PUBLIC_STELLAR_NETWORK=mainnet
 NEXT_PUBLIC_SENTRY_DSN=https://<key>@sentry.io/<project>
 NEXT_PUBLIC_GIT_COMMIT_SHA=<git-sha>
-NEXT_PUBLIC_SITE_URL=https://brain-storm.example.com
+NEXT_PUBLIC_SITE_URL=https://scoopdope.example.com
 ```
 
 ---

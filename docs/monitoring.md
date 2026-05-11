@@ -1,6 +1,6 @@
 # Monitoring Setup
 
-Brain Storm uses Prometheus for metrics collection and Grafana for visualization.
+Scoopdope uses Prometheus for metrics collection and Grafana for visualization.
 
 ## Quick Start
 
@@ -66,7 +66,7 @@ In production, configure Prometheus to scrape the `/metrics` endpoint:
 
 ```yaml
 scrape_configs:
-  - job_name: 'brain-storm-backend'
+  - job_name: 'scoopdope-backend'
     static_configs:
       - targets: ['backend:3000']
 ```

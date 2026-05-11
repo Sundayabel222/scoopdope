@@ -1,6 +1,6 @@
 # Stellar Network Integration Guide
 
-This guide explains how Brain-Storm integrates with the Stellar network — covering account management, Freighter wallet integration, on-chain credential issuance, network configuration, and Horizon API usage.
+This guide explains how scoopdope integrates with the Stellar network — covering account management, Freighter wallet integration, on-chain credential issuance, network configuration, and Horizon API usage.
 
 ---
 
@@ -17,11 +17,11 @@ This guide explains how Brain-Storm integrates with the Stellar network — cove
 
 ## Overview
 
-Brain-Storm uses Stellar for three core functions:
+scoopdope uses Stellar for three core functions:
 
 - **Authentication** — SEP-0010 wallet-based login (see [stellar-auth.md](./stellar-auth.md))
 - **Credentials** — Course completion certificates recorded on-chain via Soroban smart contracts and Horizon `ManageData` operations
-- **Token Rewards** — BST (Brain-Storm Token) minted to students via the Token Soroban contract
+- **Token Rewards** — BST (scoopdope Token) minted to students via the Token Soroban contract
 
 The backend's Stellar logic lives in `apps/backend/src/stellar/`:
 
@@ -88,7 +88,7 @@ This is only available on testnet. The backend enforces this — calling it on m
 
 ## Freighter Wallet Integration
 
-[Freighter](https://www.freighter.app/) is the official Stellar browser extension wallet. Brain-Storm uses it for:
+[Freighter](https://www.freighter.app/) is the official Stellar browser extension wallet. scoopdope uses it for:
 
 - Wallet-based login (SEP-0010)
 - Signing credential-related transactions on the frontend
@@ -158,10 +158,10 @@ See [stellar-auth.md](./stellar-auth.md) for the full SEP-0010 server-side imple
 
 ## On-Chain Credential Issuance
 
-When a student completes a course, Brain-Storm records the credential on-chain in two steps:
+When a student completes a course, scoopdope records the credential on-chain in two steps:
 
 1. **Soroban** — calls `record_progress` on the Analytics contract (primary path)
-2. **Horizon ManageData** — writes a `brain-storm:credential:<courseId>` entry to the issuer account (fallback + permanent record)
+2. **Horizon ManageData** — writes a `scoopdope:credential:<courseId>` entry to the issuer account (fallback + permanent record)
 
 ### Flow
 
@@ -218,7 +218,7 @@ If the Soroban call fails after retries, a `ManageData` operation is written to 
 const tx = new TransactionBuilder(issuerAccount, { fee: BASE_FEE, networkPassphrase })
   .addOperation(
     Operation.manageData({
-      name: `brain-storm:credential:${courseId}`,
+      name: `scoopdope:credential:${courseId}`,
       value: recipientPublicKey,
     })
   )
@@ -250,7 +250,7 @@ Query the issuer account's data entries via Horizon:
 
 ```bash
 curl https://horizon-testnet.stellar.org/accounts/<ISSUER_PUBLIC_KEY> \
-  | jq '.data | to_entries[] | select(.key | startswith("brain-storm:credential:"))'
+  | jq '.data | to_entries[] | select(.key | startswith("scoopdope:credential:"))'
 ```
 
 Each entry's key encodes the course ID and the base64-decoded value is the student's public key.
@@ -269,7 +269,7 @@ Each entry's key encodes the course ID and the base64-decoded value is the stude
 | `STELLAR_SECRET_KEY` | Testnet keypair | Mainnet keypair (fund with real XLM) |
 | `ANALYTICS_CONTRACT_ID` | Testnet contract ID | Mainnet contract ID |
 | `TOKEN_CONTRACT_ID` | Testnet contract ID | Mainnet contract ID |
-| `STELLAR_WEB_AUTH_DOMAIN` | `localhost` | `api.brainstorm.app` |
+| `STELLAR_WEB_AUTH_DOMAIN` | `localhost` | `api.Scoopdope.app` |
 
 ### Network Passphrases
 
@@ -312,7 +312,7 @@ const networkPassphrase =
 
 ## Horizon API Usage Patterns
 
-Brain-Storm uses the `@stellar/stellar-sdk` `Horizon.Server` client. Below are the common patterns used in the codebase.
+scoopdope uses the `@stellar/stellar-sdk` `Horizon.Server` client. Below are the common patterns used in the codebase.
 
 ### Initializing the Server
 

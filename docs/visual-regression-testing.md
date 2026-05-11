@@ -1,6 +1,6 @@
 # Visual Regression Testing Guide
 
-This guide explains how to set up and run visual regression tests for the Brain-Storm frontend.
+This guide explains how to set up and run visual regression tests for the scoopdope frontend.
 
 ## Overview
 

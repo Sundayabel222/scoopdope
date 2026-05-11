@@ -15,7 +15,7 @@ import { Footer } from '@/components/layout/Footer';
 describe('Footer', () => {
   it('renders copyright text', () => {
     render(<Footer />);
-    expect(screen.getByText(/Brain-Storm/)).toBeInTheDocument();
+    expect(screen.getByText(/scoopdope/)).toBeInTheDocument();
   });
 
   it('renders Docs link', () => {

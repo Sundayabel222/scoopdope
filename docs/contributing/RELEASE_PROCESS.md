@@ -46,7 +46,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release-type: node
-          package-name: brain-storm
+          package-name: scoopdope
           bump-minor-pre-major: true
           bump-patch-for-minor-pre-major: true
           
@@ -74,10 +74,10 @@ jobs:
           file: apps/backend/Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/brain-storm-backend:latest
-            ${{ secrets.DOCKER_USERNAME }}/brain-storm-backend:${{ steps.release.outputs.major }}
-            ${{ secrets.DOCKER_USERNAME }}/brain-storm-backend:${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}
-            ${{ secrets.DOCKER_USERNAME }}/brain-storm-backend:${{ steps.release.outputs.version }}
+            ${{ secrets.DOCKER_USERNAME }}/scoopdope-backend:latest
+            ${{ secrets.DOCKER_USERNAME }}/scoopdope-backend:${{ steps.release.outputs.major }}
+            ${{ secrets.DOCKER_USERNAME }}/scoopdope-backend:${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}
+            ${{ secrets.DOCKER_USERNAME }}/scoopdope-backend:${{ steps.release.outputs.version }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 ```

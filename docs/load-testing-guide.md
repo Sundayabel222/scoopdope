@@ -1,6 +1,6 @@
 # Load Testing Guide
 
-This guide covers load testing for Brain-Storm using k6, including realistic user journey scenarios and performance analysis.
+This guide covers load testing for scoopdope using k6, including realistic user journey scenarios and performance analysis.
 
 ## Prerequisites
 
@@ -252,7 +252,7 @@ load-tests:
 
 ```bash
 # Run load tests daily at 2 AM
-0 2 * * * cd /path/to/brain-storm && ./scripts/load-tests/run-all-tests.sh
+0 2 * * * cd /path/to/scoopdope && ./scripts/load-tests/run-all-tests.sh
 ```
 
 ## Troubleshooting

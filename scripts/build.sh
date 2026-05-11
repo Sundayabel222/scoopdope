@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "Building Brain-Storm smart contracts..."
+echo "Building scoopdope smart contracts..."
 
 # Loop over all contracts in contracts/ directory
 for contract_dir in contracts/*/; do

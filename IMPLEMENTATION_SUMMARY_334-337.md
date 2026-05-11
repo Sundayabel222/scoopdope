@@ -1,7 +1,7 @@
 # Implementation Summary: Issues #334-337
 
 ## Overview
-Successfully implemented all four GitHub issues for the Brain-Storm platform:
+Successfully implemented all four GitHub issues for the scoopdope platform:
 - **#334**: Token vesting cliff implementation
 - **#335**: Analytics event indexing and filtering
 - **#336**: GitHub Actions workflow for contract tests

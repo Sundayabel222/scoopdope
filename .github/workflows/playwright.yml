@@ -17,7 +17,7 @@ jobs:
         image: postgres:15
         env:
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: brainstorm_test
+          POSTGRES_DB: Scoopdope_test
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -43,7 +43,7 @@ jobs:
       DATABASE_PORT: 5432
       DATABASE_USER: postgres
       DATABASE_PASSWORD: postgres
-      DATABASE_NAME: brainstorm_test
+      DATABASE_NAME: Scoopdope_test
       REDIS_URL: redis://localhost:6379
       JWT_SECRET: ci-test-secret
       STELLAR_HORIZON_URL: https://horizon-testnet.stellar.org

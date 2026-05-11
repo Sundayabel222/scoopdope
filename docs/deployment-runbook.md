@@ -1,6 +1,6 @@
 # Deployment Runbook
 
-Step-by-step guide for deploying Brain-Storm to production. Follow sections in order. Do not skip the pre-deployment checklist.
+Step-by-step guide for deploying scoopdope to production. Follow sections in order. Do not skip the pre-deployment checklist.
 
 **Audience:** Engineers with production access  
 **Estimated time:** 30–45 min (first deploy), 15–20 min (subsequent releases)
@@ -35,7 +35,7 @@ Complete every item before touching production. Check off as you go.
 
 - [ ] Database backup taken and verified restorable:
   ```bash
-  pg_dump -h $DATABASE_HOST -U $DATABASE_USER brain-storm \
+  pg_dump -h $DATABASE_HOST -U $DATABASE_USER scoopdope \
     | gzip > backup-$(date +%Y%m%d-%H%M%S).sql.gz
   ```
 - [ ] Pending migrations reviewed (`apps/backend/src/migrations/`)
@@ -161,7 +161,7 @@ Push a GitHub Release tag — `deploy-production.yml` handles the rest:
 5. Runs health checks (30 attempts × 10s = 5 min window)
 6. Auto-rolls back on failure
 
-Monitor the workflow at: `https://github.com/BrainTease/Brain-Storm/actions`
+Monitor the workflow at: `https://github.com/BrainTease/scoopdope/actions`
 
 ### Manual Path
 
@@ -170,7 +170,7 @@ Use this if the automated workflow is unavailable.
 **Step 1 — Pull the release image**
 
 ```bash
-docker pull ghcr.io/braintease/brain-storm/backend:v1.2.0
+docker pull ghcr.io/braintease/scoopdope/backend:v1.2.0
 ```
 
 **Step 2 — Run database migrations**
@@ -178,7 +178,7 @@ docker pull ghcr.io/braintease/brain-storm/backend:v1.2.0
 ```bash
 docker run --rm \
   --env-file .env.production \
-  ghcr.io/braintease/brain-storm/backend:v1.2.0 \
+  ghcr.io/braintease/scoopdope/backend:v1.2.0 \
   node dist/main migration:run
 ```
 
@@ -212,7 +212,7 @@ The frontend is a Next.js static/SSR app. It is built and deployed independently
 **Step 1 — Build**
 
 ```bash
-NEXT_PUBLIC_API_URL=https://api.brain-storm.example.com \
+NEXT_PUBLIC_API_URL=https://api.scoopdope.example.com \
 NEXT_PUBLIC_STELLAR_NETWORK=mainnet \
 NEXT_PUBLIC_GIT_COMMIT_SHA=$(git rev-parse HEAD) \
 npm run build --workspace=apps/frontend
@@ -231,7 +231,7 @@ Or push the built `.next/` output to your CDN / Vercel / static host.
 **Step 3 — Verify**
 
 ```bash
-curl -sf https://brain-storm.example.com | grep -q "Brain-Storm" && echo "✅ Frontend up"
+curl -sf https://scoopdope.example.com | grep -q "scoopdope" && echo "✅ Frontend up"
 ```
 
 ---
@@ -243,7 +243,7 @@ Run these checks immediately after every deployment, in order.
 ### 5a. Backend Health Endpoint
 
 ```bash
-API_URL=https://api.brain-storm.example.com \
+API_URL=https://api.scoopdope.example.com \
 MAX_RETRIES=30 \
 RETRY_INTERVAL=10 \
 ./scripts/health-check.sh
@@ -267,7 +267,7 @@ A `503` means one or more dependencies are unhealthy — check the `details` fie
 ### 5b. Smoke Test Key Endpoints
 
 ```bash
-BASE=https://api.brain-storm.example.com
+BASE=https://api.scoopdope.example.com
 
 # Auth
 curl -sf -o /dev/null -w "%{http_code}" $BASE/v1/auth/login \
@@ -287,7 +287,7 @@ curl -sf -o /dev/null -w "%{http_code}" $BASE/metrics | grep -q 200 && echo "✅
 ### 5c. Stellar Connectivity
 
 ```bash
-curl -sf https://api.brain-storm.example.com/v1/stellar/network-status | jq '.horizon.status, .soroban.status'
+curl -sf https://api.scoopdope.example.com/v1/stellar/network-status | jq '.horizon.status, .soroban.status'
 ```
 
 Both should return `"healthy"`.
@@ -295,13 +295,13 @@ Both should return `"healthy"`.
 ### 5d. Frontend
 
 ```bash
-curl -sf https://brain-storm.example.com | grep -q "Brain-Storm" && echo "✅ Frontend serving"
+curl -sf https://scoopdope.example.com | grep -q "scoopdope" && echo "✅ Frontend serving"
 ```
 
 ### 5e. Database Migration Confirmation
 
 ```bash
-psql -h $DATABASE_HOST -U $DATABASE_USER -d brain-storm \
+psql -h $DATABASE_HOST -U $DATABASE_USER -d scoopdope \
   -c "SELECT version, name, \"executedAt\" FROM migrations ORDER BY \"executedAt\" DESC LIMIT 5;"
 ```
 
@@ -321,7 +321,7 @@ Confirm the latest migration timestamp matches what was just deployed.
 
 ```bash
 # List recent GHCR images
-gh api /orgs/BrainTease/packages/container/brain-storm%2Fbackend/versions \
+gh api /orgs/BrainTease/packages/container/scoopdope%2Fbackend/versions \
   --jq '.[0:5] | .[] | .metadata.container.tags[]'
 ```
 
@@ -426,7 +426,7 @@ Configure these Prometheus alert rules in `infra/monitoring/prometheus.yml`:
 
 ```yaml
 groups:
-  - name: brainstorm
+  - name: Scoopdope
     rules:
       - alert: HighErrorRate
         expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) > 0.01
@@ -441,7 +441,7 @@ groups:
           summary: "Stellar RPC p95 latency above 2s"
 
       - alert: BackendDown
-        expr: up{job="brain-storm-backend"} == 0
+        expr: up{job="scoopdope-backend"} == 0
         for: 1m
         annotations:
           summary: "Backend is unreachable"

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Brain-Storm API documentation can be deployed to GitHub Pages for public access.
+The scoopdope API documentation can be deployed to GitHub Pages for public access.
 
 ## Setup Instructions
 
@@ -105,7 +105,7 @@ cp ../api/swagger-ui.html ../../docs/api/dist/index.html
 ## Accessing Documentation
 
 Once deployed, the API documentation will be available at:
-- **Production**: https://nonso-eze.github.io/Brain-Storm/
+- **Production**: https://nonso-eze.github.io/scoopdope/
 - **Local**: http://localhost:3000/api/docs
 
 ## Updating Documentation

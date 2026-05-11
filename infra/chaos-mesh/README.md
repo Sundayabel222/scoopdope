@@ -67,17 +67,17 @@ Then visit: http://localhost:2333
 
 1. Check pod status:
 ```bash
-kubectl get pods -l app=brain-storm-backend
+kubectl get pods -l app=scoopdope-backend
 ```
 
 2. Check logs:
 ```bash
-kubectl logs -l app=brain-storm-backend --tail=100
+kubectl logs -l app=scoopdope-backend --tail=100
 ```
 
 3. Restart deployment:
 ```bash
-kubectl rollout restart deployment/brain-storm-backend
+kubectl rollout restart deployment/scoopdope-backend
 ```
 
 ### If Database Connection is Lost

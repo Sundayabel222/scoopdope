@@ -1,8 +1,8 @@
 # API Integration Examples
 
-Real-world examples for integrating with the Brain-Storm API using TypeScript/JavaScript.
+Real-world examples for integrating with the scoopdope API using TypeScript/JavaScript.
 
-**Base URL:** `http://localhost:3000/v1` (development) · `https://api.brain-storm.example.com/v1` (production)  
+**Base URL:** `http://localhost:3000/v1` (development) · `https://api.scoopdope.example.com/v1` (production)  
 **Interactive docs:** `http://localhost:3000/api/docs`
 
 ---
@@ -158,7 +158,7 @@ API keys are issued by admins and sent via the `X-API-KEY` header. They are SHA-
 ```typescript
 // Using an API key instead of a JWT
 const courses = await apiFetch('/courses', {
-  apiKey: process.env.BRAINSTORM_API_KEY,
+  apiKey: process.env.Scoopdope_API_KEY,
 });
 ```
 

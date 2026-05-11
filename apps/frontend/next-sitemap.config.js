@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://brain-storm.app',
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://scoopdope.app',
   generateRobotsTxt: true,
   robotsTxtOptions: {
     policies: [

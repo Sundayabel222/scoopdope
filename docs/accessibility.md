@@ -1,6 +1,6 @@
 # Accessibility (a11y) Guidelines
 
-Brain-Storm targets **WCAG 2.1 Level AA** compliance. This document covers testing procedures, keyboard navigation requirements, screen reader support, ARIA usage patterns drawn from the existing codebase, and the PR checklist every contributor must complete.
+scoopdope targets **WCAG 2.1 Level AA** compliance. This document covers testing procedures, keyboard navigation requirements, screen reader support, ARIA usage patterns drawn from the existing codebase, and the PR checklist every contributor must complete.
 
 ---
 
@@ -88,7 +88,7 @@ All interactive elements must be fully operable via keyboard alone (WCAG 2.1 SC 
 
 ### Focus Management
 
-- Every interactive element must receive a visible focus indicator. Brain-Storm uses `focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2` on `Button` and `Input`. Apply the same to any new interactive element:
+- Every interactive element must receive a visible focus indicator. scoopdope uses `focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2` on `Button` and `Input`. Apply the same to any new interactive element:
 
 ```typescript
 // Tailwind classes required on all focusable elements
@@ -180,7 +180,7 @@ Use `role="alert"` (assertive) for errors and `role="status"` (polite) for non-c
 
 ## ARIA Usage Patterns
 
-The following patterns are established in the Brain-Storm codebase. Follow them consistently.
+The following patterns are established in the scoopdope codebase. Follow them consistently.
 
 ### `aria-current="page"` — Active Navigation Link
 

@@ -1,6 +1,6 @@
 # Health Check Module
 
-This module provides comprehensive health checking capabilities for the Brain-Storm backend API, designed for load balancers, container orchestrators, and monitoring systems.
+This module provides comprehensive health checking capabilities for the scoopdope backend API, designed for load balancers, container orchestrators, and monitoring systems.
 
 ## Features
 
@@ -97,7 +97,7 @@ DATABASE_HOST=localhost
 DATABASE_PORT=5432
 DATABASE_USER=your_user
 DATABASE_PASSWORD=your_password
-DATABASE_NAME=brain-storm
+DATABASE_NAME=scoopdope
 
 # Redis configuration (used by cache manager health check)
 REDIS_URL=redis://localhost:6379
@@ -142,7 +142,7 @@ backend brain_storm_backend
 ```yaml
 services:
   backend:
-    image: brain-storm-backend
+    image: scoopdope-backend
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
       interval: 30s
@@ -156,13 +156,13 @@ services:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: brain-storm-backend
+  name: scoopdope-backend
 spec:
   template:
     spec:
       containers:
       - name: backend
-        image: brain-storm-backend
+        image: scoopdope-backend
         ports:
         - containerPort: 3000
         livenessProbe:
@@ -193,7 +193,7 @@ Use the provided script for post-deployment verification:
 ./scripts/health-check.sh
 
 # With custom configuration
-API_URL=https://api.brainstorm.app \
+API_URL=https://api.Scoopdope.app \
 MAX_RETRIES=20 \
 RETRY_INTERVAL=10 \
 ./scripts/health-check.sh
@@ -210,7 +210,7 @@ The health endpoint can be scraped by Prometheus for monitoring:
 ```yaml
 # prometheus.yml
 scrape_configs:
-  - job_name: 'brain-storm-health'
+  - job_name: 'scoopdope-health'
     metrics_path: '/health'
     static_configs:
       - targets: ['backend:3000']

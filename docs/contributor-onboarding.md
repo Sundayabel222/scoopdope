@@ -1,6 +1,6 @@
 # Contributor Onboarding Guide
 
-Welcome to Brain-Storm! This guide gets you from zero to your first merged pull request. It assumes basic familiarity with Git and TypeScript but no prior knowledge of the codebase.
+Welcome to scoopdope! This guide gets you from zero to your first merged pull request. It assumes basic familiarity with Git and TypeScript but no prior knowledge of the codebase.
 
 ---
 
@@ -18,7 +18,7 @@ Welcome to Brain-Storm! This guide gets you from zero to your first merged pull 
 ## 1. Project Structure
 
 ```
-brain-storm/
+scoopdope/
 ├── apps/
 │   ├── backend/               # NestJS REST API (TypeScript)
 │   │   └── src/
@@ -87,8 +87,8 @@ sudo mv stellar /usr/local/bin/
 ### Automated setup (recommended)
 
 ```bash
-git clone https://github.com/BrainTease/Brain-Storm.git
-cd Brain-Storm
+git clone https://github.com/BrainTease/scoopdope.git
+cd scoopdope
 ./scripts/setup.sh
 ```
 
@@ -98,8 +98,8 @@ The script checks prerequisites, copies `.env.example` → `.env`, installs Node
 
 ```bash
 # 1. Clone and configure
-git clone https://github.com/BrainTease/Brain-Storm.git
-cd Brain-Storm
+git clone https://github.com/BrainTease/scoopdope.git
+cd scoopdope
 cp .env.example .env          # then edit .env — see below
 
 # 2. Start database services
@@ -160,15 +160,15 @@ This is a complete walkthrough of the contribution lifecycle using a real exampl
 
 ### Step 1 — Find an issue
 
-Browse [good first issues](https://github.com/BrainTease/Brain-Storm/issues?q=is%3Aopen+label%3A%22good+first+issue%22) on GitHub. Pick one that's unassigned and leave a comment: _"I'd like to work on this."_
+Browse [good first issues](https://github.com/BrainTease/scoopdope/issues?q=is%3Aopen+label%3A%22good+first+issue%22) on GitHub. Pick one that's unassigned and leave a comment: _"I'd like to work on this."_
 
 ### Step 2 — Fork and branch
 
 ```bash
 # Fork on GitHub, then:
-git clone https://github.com/<your-username>/Brain-Storm.git
-cd Brain-Storm
-git remote add upstream https://github.com/BrainTease/Brain-Storm.git
+git clone https://github.com/<your-username>/scoopdope.git
+cd scoopdope
+git remote add upstream https://github.com/BrainTease/scoopdope.git
 git checkout -b feat/course-category
 ```
 
@@ -449,9 +449,9 @@ Run with `cargo test` from the repo root.
 
 Look for these labels on GitHub:
 
-- [`good first issue`](https://github.com/BrainTease/Brain-Storm/issues?q=is%3Aopen+label%3A%22good+first+issue%22) — scoped, well-defined tasks ideal for first contributions
-- [`docs`](https://github.com/BrainTease/Brain-Storm/issues?q=is%3Aopen+label%3Adocs) — documentation improvements, no code required
-- [`bug`](https://github.com/BrainTease/Brain-Storm/issues?q=is%3Aopen+label%3Abug) — confirmed bugs with reproduction steps
+- [`good first issue`](https://github.com/BrainTease/scoopdope/issues?q=is%3Aopen+label%3A%22good+first+issue%22) — scoped, well-defined tasks ideal for first contributions
+- [`docs`](https://github.com/BrainTease/scoopdope/issues?q=is%3Aopen+label%3Adocs) — documentation improvements, no code required
+- [`bug`](https://github.com/BrainTease/scoopdope/issues?q=is%3Aopen+label%3Abug) — confirmed bugs with reproduction steps
 
 ### What makes a good first issue?
 
@@ -468,7 +468,7 @@ If you spot something — a missing validation, a typo in an error message, a mi
 
 ## 6. Getting Help
 
-- **Stuck on setup?** Check the [troubleshooting table](#troubleshooting) above, then open a [GitHub Discussion](https://github.com/BrainTease/Brain-Storm/discussions).
+- **Stuck on setup?** Check the [troubleshooting table](#troubleshooting) above, then open a [GitHub Discussion](https://github.com/BrainTease/scoopdope/discussions).
 - **Question about a specific file?** Leave a comment on the relevant issue or PR.
 - **Stellar/Soroban questions?** The [Stellar Discord](https://discord.gg/stellardev) `#soroban` channel is very active.
 - **Security issue?** Do **not** open a public issue — follow the [Security Policy](../SECURITY.md).

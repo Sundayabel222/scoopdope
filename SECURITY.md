@@ -9,10 +9,10 @@
 
 ## Responsible Disclosure Policy
 
-Brain-Storm takes security seriously. If you discover a potential vulnerability, we ask that you follow responsible disclosure:
+scoopdope takes security seriously. If you discover a potential vulnerability, we ask that you follow responsible disclosure:
 
 1. **Do not open a public GitHub issue** for security vulnerabilities.
-2. **Email us privately** at `security@brainstorm.app` with:
+2. **Email us privately** at `security@Scoopdope.app` with:
    - A clear description of the vulnerability.
    - Steps to reproduce (proof-of-concept if possible).
    - The potential impact and affected components.
@@ -62,4 +62,4 @@ The following are **out of scope**:
 - MFA (TOTP) support for user accounts.
 - Helmet and CORS configured on the API.
 
-Thank you for helping keep Brain-Storm and its users safe!
+Thank you for helping keep scoopdope and its users safe!

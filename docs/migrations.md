@@ -1,6 +1,6 @@
 # Database Migrations Guide
 
-This document describes how to work with TypeORM migrations in the Brain-Storm backend.
+This document describes how to work with TypeORM migrations in the scoopdope backend.
 
 ## Overview
 
@@ -15,7 +15,7 @@ DATABASE_HOST=localhost
 DATABASE_PORT=5432
 DATABASE_USER=your_db_user
 DATABASE_PASSWORD=your_db_password
-DATABASE_NAME=brain-storm
+DATABASE_NAME=scoopdope
 ```
 
 ## Available Scripts

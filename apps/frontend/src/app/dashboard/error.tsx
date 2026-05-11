@@ -16,11 +16,11 @@ export default function DashboardError({
   }, [error]);
 
   const reportIssue = () => {
-    const subject = encodeURIComponent('Dashboard Error Report from Brain Storm App');
+    const subject = encodeURIComponent('Dashboard Error Report from Scoopdope App');
     const body = encodeURIComponent(
       `Error Details:\n${error?.message || 'Unknown error'}\n\nStack Trace:\n${error?.stack || 'No stack trace'}\n\nPlease describe what you were doing when this error occurred:`
     );
-    window.location.href = `mailto:support@brainstorm.com?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:support@Scoopdope.com?subject=${subject}&body=${body}`;
   };
 
   return (

@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Create a report to help us improve Brain-Storm
+about: Create a report to help us improve scoopdope
 title: 'fix: '
 labels: 'bug'
 assignees: ''

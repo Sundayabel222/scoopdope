@@ -1,6 +1,6 @@
-# @brain-storm/types
+# @scoopdope/types
 
-Shared TypeScript types, DTOs and interfaces for the Brain-Storm platform.
+Shared TypeScript types, DTOs and interfaces for the scoopdope platform.
 
 This package is the single source of truth for all data shapes exchanged between the frontend and backend. It eliminates type drift and ensures both apps stay in sync.
 
@@ -25,7 +25,7 @@ import type {
   PaginatedResponse,
   UserProfile,
   RecordProgressDto,
-} from '@brain-storm/types';
+} from '@scoopdope/types';
 ```
 
 ## Adding to a workspace app
@@ -35,7 +35,7 @@ In `apps/backend/package.json` or `apps/frontend/package.json`:
 ```json
 {
   "dependencies": {
-    "@brain-storm/types": "*"
+    "@scoopdope/types": "*"
   }
 }
 ```
@@ -59,7 +59,7 @@ npx openapi-typescript openapi.json -o packages/types/src/generated.types.ts
 ### Backend (NestJS)
 
 ```ts
-import type { CreateCourseDto } from '@brain-storm/types';
+import type { CreateCourseDto } from '@scoopdope/types';
 
 @Post()
 create(@Body() dto: CreateCourseDto) { ... }
@@ -68,7 +68,7 @@ create(@Body() dto: CreateCourseDto) { ... }
 ### Frontend (Next.js)
 
 ```ts
-import type { CourseSummary, PaginatedResponse } from '@brain-storm/types';
+import type { CourseSummary, PaginatedResponse } from '@scoopdope/types';
 
 const { data } = useSWR<PaginatedResponse<CourseSummary>>('/api/courses');
 ```

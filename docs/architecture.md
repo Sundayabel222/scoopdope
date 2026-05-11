@@ -2,7 +2,7 @@
 
 The diagram below shows the full system — all layers, contracts, external services, and the data flow for key operations.
 
-![Brain-Storm Architecture](./architecture.svg)
+![scoopdope Architecture](./architecture.svg)
 
 ## Layers
 

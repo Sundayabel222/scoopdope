@@ -45,7 +45,7 @@ jobs:
         image: postgres:15
         env:
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: brainstorm_test
+          POSTGRES_DB: Scoopdope_test
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -86,7 +86,7 @@ jobs:
         run: npm run start:prod --workspace=apps/backend &
         env:
           NODE_ENV: production
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/brainstorm_test
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/Scoopdope_test
           REDIS_URL: redis://localhost:6379
           JWT_SECRET: test-secret-key
           STELLAR_SECRET_KEY: ${{ secrets.STELLAR_SECRET_KEY }}

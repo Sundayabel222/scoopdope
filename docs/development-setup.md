@@ -1,6 +1,6 @@
 # Developer Setup Guide
 
-Complete guide for setting up Brain-Storm locally from scratch.
+Complete guide for setting up scoopdope locally from scratch.
 
 ---
 
@@ -29,8 +29,8 @@ stellar --version  # should print v21.5.0
 ## 1. Clone & Configure Environment
 
 ```bash
-git clone https://github.com/your-org/brain-storm.git
-cd brain-storm
+git clone https://github.com/your-org/scoopdope.git
+cd scoopdope
 cp .env.example .env
 ```
 
@@ -40,7 +40,7 @@ Edit `.env` and fill in the required values:
 |---|---|---|
 | `DATABASE_HOST` | `localhost` | Use `postgres` inside Docker |
 | `DATABASE_PORT` | `5432` | |
-| `DATABASE_NAME` | `brain-storm` | |
+| `DATABASE_NAME` | `scoopdope` | |
 | `DATABASE_USERNAME` | `postgres` | |
 | `DATABASE_PASSWORD` | `postgres` | |
 | `REDIS_HOST` | `localhost` | Use `redis` inside Docker |
@@ -66,9 +66,9 @@ PostgreSQL will be available at `localhost:5432` and Redis at `localhost:6379`.
 
 ```bash
 # PostgreSQL
-createdb brain-storm
+createdb scoopdope
 psql -c "CREATE USER postgres WITH PASSWORD 'postgres';"
-psql -c "GRANT ALL PRIVILEGES ON DATABASE \"brain-storm\" TO postgres;"
+psql -c "GRANT ALL PRIVILEGES ON DATABASE \"scoopdope\" TO postgres;"
 
 # Redis — start the server
 redis-server --daemonize yes

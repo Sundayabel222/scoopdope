@@ -176,7 +176,7 @@ export class StellarService {
     })
       .addOperation(
         Operation.manageData({
-          name: `brain-storm:credential:${courseId}`,
+          name: `scoopdope:credential:${courseId}`,
           value: recipientPublicKey,
         })
       )
@@ -229,7 +229,7 @@ export class StellarService {
     })
       .addOperation(
         Operation.manageData({
-          name: `brain-storm:credential:${courseId}`,
+          name: `scoopdope:credential:${courseId}`,
           value: recipientPublicKey,
         })
       )

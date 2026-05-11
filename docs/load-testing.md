@@ -1,11 +1,11 @@
 # Load Testing Guide
 
-This document describes how to run load tests for the Brain-Storm API using k6.
+This document describes how to run load tests for the scoopdope API using k6.
 
 ## Prerequisites
 
 - k6 installed: https://k6.io/docs/getting-started/installation/
-- Brain-Storm backend running on `http://localhost:3000` (or set `API_URL` environment variable)
+- scoopdope backend running on `http://localhost:3000` (or set `API_URL` environment variable)
 
 ## Installation
 

@@ -1,6 +1,6 @@
 # Data Privacy & GDPR Guide
 
-This document describes how Brain-Storm collects, stores, processes, and deletes personal data, and how the platform meets obligations under the **General Data Protection Regulation (GDPR)** and similar privacy regulations.
+This document describes how scoopdope collects, stores, processes, and deletes personal data, and how the platform meets obligations under the **General Data Protection Regulation (GDPR)** and similar privacy regulations.
 
 ---
 
@@ -56,7 +56,7 @@ This document describes how Brain-Storm collects, stores, processes, and deletes
 | `status` | `none` / `pending` / `approved` / `rejected` | No |
 | `providerId` | Session ID from Synaps.io KYC provider | **Yes** |
 
-KYC identity documents (passport, ID card, selfie) are processed and stored exclusively by the third-party provider **Synaps.io**. Brain-Storm does not receive or store raw identity documents.
+KYC identity documents (passport, ID card, selfie) are processed and stored exclusively by the third-party provider **Synaps.io**. scoopdope does not receive or store raw identity documents.
 
 #### `notifications` table (PostgreSQL)
 
@@ -88,7 +88,7 @@ Course completion credentials are recorded on the Stellar ledger as `ManageData`
 - Passwords are never stored in plaintext — only bcrypt hashes.
 - MFA secrets are stored encrypted at rest.
 - `username`, `avatar`, `bio`, and `stellarPublicKey` are all optional.
-- KYC documents are never stored by Brain-Storm — only the provider session ID and approval status.
+- KYC documents are never stored by scoopdope — only the provider session ID and approval status.
 
 ### Third-Party Processors
 
@@ -167,7 +167,7 @@ A complete export must include:
 
 ### Right to Erasure (GDPR Art. 17)
 
-Users have the right to request deletion of their personal data. Brain-Storm implements **soft deletion** — setting `deletedAt` on the `users` row — which excludes the user from all queries while preserving referential integrity.
+Users have the right to request deletion of their personal data. scoopdope implements **soft deletion** — setting `deletedAt` on the `users` row — which excludes the user from all queries while preserving referential integrity.
 
 #### Soft Delete (current implementation)
 
@@ -236,7 +236,7 @@ await this.cacheManager.del('leaderboard:top50');
 
 ### Cookies Currently in Use
 
-Brain-Storm does not set first-party cookies for tracking or advertising. The following technical cookies may be set:
+scoopdope does not set first-party cookies for tracking or advertising. The following technical cookies may be set:
 
 | Cookie | Purpose | Type | Duration |
 |---|---|---|---|
@@ -296,7 +296,7 @@ if (hasConsent()) {
 | Refresh tokens | 7 days (or until revoked) | Security |
 | API keys | Until revoked by user | Contract |
 | Notifications | 90 days | Legitimate interest |
-| KYC records (Brain-Storm) | Duration of account + 5 years | Legal obligation (AML) |
+| KYC records (scoopdope) | Duration of account + 5 years | Legal obligation (AML) |
 | KYC documents (Synaps.io) | Per Synaps.io DPA | Legal obligation |
 | Application logs | 30 days | Legitimate interest |
 | Redis cache entries | Per TTL (30 s – 5 min) | Technical necessity |

@@ -1,6 +1,6 @@
 # Smart Contract Fuzzing Tests
 
-This document describes the fuzzing test strategy for Brain-Storm smart contracts.
+This document describes the fuzzing test strategy for scoopdope smart contracts.
 
 ## Overview
 

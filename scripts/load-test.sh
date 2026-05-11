@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Load testing script for Brain-Storm API
+# Load testing script for scoopdope API
 # Requires k6 to be installed: https://k6.io/docs/getting-started/installation/
 
 set -e
@@ -10,7 +10,7 @@ RESULTS_DIR="./load-test-results"
 
 mkdir -p "$RESULTS_DIR"
 
-echo "🚀 Starting load tests for Brain-Storm API"
+echo "🚀 Starting load tests for scoopdope API"
 echo "API URL: $API_URL"
 echo ""
 

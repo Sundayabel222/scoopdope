@@ -1,6 +1,6 @@
 # SEP-0010 Stellar Web Authentication
 
-Brain-Storm implements [SEP-0010](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0010.md) — the Stellar Web Authentication standard — allowing any Stellar wallet to authenticate without a password.
+scoopdope implements [SEP-0010](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0010.md) — the Stellar Web Authentication standard — allowing any Stellar wallet to authenticate without a password.
 
 ---
 
@@ -21,7 +21,7 @@ The JWT is identical to the one issued by the email/password login flow and can 
 | `STELLAR_WEB_AUTH_DOMAIN` | Domain embedded in the challenge transaction | `localhost` |
 | `STELLAR_SECRET_KEY` | Server signing keypair (same key used for credential issuance) | required |
 
-Set `STELLAR_WEB_AUTH_DOMAIN` to your public hostname in production, e.g. `api.brainstorm.app`.
+Set `STELLAR_WEB_AUTH_DOMAIN` to your public hostname in production, e.g. `api.Scoopdope.app`.
 
 ---
 
@@ -101,7 +101,7 @@ const { access_token } = await fetch('/auth/stellar', {
 
 ## Account Provisioning
 
-If the Stellar public key is not linked to any existing Brain-Storm account, a new account is automatically created and the public key is stored as its `stellarPublicKey`. The user can later link an email/password via the profile settings.
+If the Stellar public key is not linked to any existing scoopdope account, a new account is automatically created and the public key is stored as its `stellarPublicKey`. The user can later link an email/password via the profile settings.
 
 ---
 

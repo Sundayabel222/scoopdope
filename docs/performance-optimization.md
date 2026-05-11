@@ -1,6 +1,6 @@
 # Performance Optimization Guide
 
-Best practices for optimizing performance across the Brain-Storm stack — backend caching, frontend rendering, database queries, Soroban contract gas, and CDN/asset delivery.
+Best practices for optimizing performance across the scoopdope stack — backend caching, frontend rendering, database queries, Soroban contract gas, and CDN/asset delivery.
 
 ---
 
@@ -16,7 +16,7 @@ Best practices for optimizing performance across the Brain-Storm stack — backe
 
 ## Backend Caching Strategies (Redis)
 
-Brain-Storm uses `cache-manager` with `cache-manager-redis-store` as a global NestJS cache module. Redis also backs the rate-limiter via `ThrottlerStorageRedisService`.
+scoopdope uses `cache-manager` with `cache-manager-redis-store` as a global NestJS cache module. Redis also backs the rate-limiter via `ThrottlerStorageRedisService`.
 
 ### Global TTL
 
@@ -185,7 +185,7 @@ ANALYZE=true npm run build:frontend
 
 ## Database Query Optimization
 
-Brain-Storm uses TypeORM with PostgreSQL. The following patterns are already in use and should be maintained.
+scoopdope uses TypeORM with PostgreSQL. The following patterns are already in use and should be maintained.
 
 ### Pagination
 
@@ -233,7 +233,7 @@ export class Course {
 }
 ```
 
-Key columns to index in Brain-Storm:
+Key columns to index in scoopdope:
 
 | Table | Column(s) | Reason |
 |---|---|---|
@@ -270,7 +270,7 @@ TypeOrmModule.forRootAsync({
 
 ## Contract Gas Optimization
 
-Soroban charges fees based on CPU instructions, memory, and ledger entry reads/writes. The following patterns are used in Brain-Storm contracts and should be followed for any new contract work.
+Soroban charges fees based on CPU instructions, memory, and ledger entry reads/writes. The following patterns are used in scoopdope contracts and should be followed for any new contract work.
 
 ### Use `instance` Storage for Shared State
 

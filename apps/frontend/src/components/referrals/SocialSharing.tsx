@@ -9,8 +9,8 @@ interface SocialSharingProps {
 }
 
 export function SocialSharing({
-  referralUrl = 'https://brain-storm.app/signup?ref=YOUR_CODE',
-  message = 'Join me on Brain-Storm! Learn blockchain development with verifiable credentials. Sign up now!'
+  referralUrl = 'https://scoopdope.app/signup?ref=YOUR_CODE',
+  message = 'Join me on scoopdope! Learn blockchain development with verifiable credentials. Sign up now!'
 }: SocialSharingProps) {
   const [copied, setCopied] = useState(false);
 

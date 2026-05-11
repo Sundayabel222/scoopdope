@@ -9,11 +9,11 @@ terraform {
   }
 
   backend "s3" {
-    bucket         = "brain-storm-terraform-state"
+    bucket         = "scoopdope-terraform-state"
     key            = "prod/terraform.tfstate"
     region         = "us-east-1"
     encrypt        = true
-    dynamodb_table = "brain-storm-terraform-locks"
+    dynamodb_table = "scoopdope-terraform-locks"
   }
 }
 

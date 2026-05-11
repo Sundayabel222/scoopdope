@@ -18,7 +18,7 @@ jobs:
         image: postgres:15
         env:
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: brain-storm-test
+          POSTGRES_DB: scoopdope-test
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -69,7 +69,7 @@ jobs:
           DATABASE_PORT: 5432
           DATABASE_USER: postgres
           DATABASE_PASSWORD: postgres
-          DATABASE_NAME: brain-storm-test
+          DATABASE_NAME: scoopdope-test
           REDIS_URL: redis://localhost:6379
           LOG_LEVEL: info
           JWT_SECRET: test-secret-key

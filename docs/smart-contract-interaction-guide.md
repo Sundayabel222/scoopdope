@@ -1,6 +1,6 @@
 # Smart Contract Interaction Guide
 
-This guide covers how to interact with the Brain-Storm Soroban smart contracts deployed on the Stellar network. It targets backend (NestJS/TypeScript) and frontend (Next.js/TypeScript) developers, as well as Rust developers writing cross-contract calls.
+This guide covers how to interact with the scoopdope Soroban smart contracts deployed on the Stellar network. It targets backend (NestJS/TypeScript) and frontend (Next.js/TypeScript) developers, as well as Rust developers writing cross-contract calls.
 
 ---
 
@@ -189,7 +189,7 @@ SEP-0041 compatible fungible token. Max supply: 1 billion BST (stored with 7 dec
 | Function | Auth Required | Description |
 |---|---|---|
 | `initialize(admin)` | admin | One-time setup |
-| `name()` | none | Returns `"Brain-Storm Token"` |
+| `name()` | none | Returns `"scoopdope Token"` |
 | `symbol()` | none | Returns `"BST"` |
 | `decimals()` | none | Returns `7` |
 | `balance(addr)` | none | Token balance for address |
@@ -272,7 +272,7 @@ await invokeContract(CERT, 'mint_certificate', [
   new Address(issuerKeypair.publicKey()).toScVal(),  // admin
   new Address(studentPublicKey).toScVal(),           // recipient
   nativeToScVal('RUST101', { type: 'symbol' }),      // course_id
-  nativeToScVal('https://brainstorm.io/certs/42', { type: 'string' }), // metadata_url
+  nativeToScVal('https://Scoopdope.io/certs/42', { type: 'string' }), // metadata_url
 ]);
 
 // Fetch all certificates for a student

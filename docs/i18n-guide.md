@@ -1,6 +1,6 @@
 # Internationalization (i18n) Guide
 
-Guide for adding and maintaining translations in the Brain-Storm frontend.
+Guide for adding and maintaining translations in the scoopdope frontend.
 
 ---
 
@@ -16,7 +16,7 @@ Guide for adding and maintaining translations in the Brain-Storm frontend.
 
 ## 1. next-intl Setup and Usage
 
-Brain-Storm uses [next-intl](https://next-intl.dev) (`^4.8.3`) for all frontend translations.
+scoopdope uses [next-intl](https://next-intl.dev) (`^4.8.3`) for all frontend translations.
 
 ### How It Fits Together
 
@@ -261,7 +261,7 @@ npm run test:e2e --workspace=apps/frontend
 
 ## 4. RTL Language Support
 
-Brain-Storm does not currently support any RTL (right-to-left) languages. This section documents what must be done when an RTL language (e.g. Arabic `ar`, Hebrew `he`, Persian `fa`) is added.
+scoopdope does not currently support any RTL (right-to-left) languages. This section documents what must be done when an RTL language (e.g. Arabic `ar`, Hebrew `he`, Persian `fa`) is added.
 
 ### HTML Direction Attribute
 

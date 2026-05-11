@@ -123,7 +123,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "brain-storm-analytics"
+name = "scoopdope-analytics"
 version = "0.1.0"
 dependencies = [
  "proptest",
@@ -131,28 +131,28 @@ dependencies = [
 ]
 
 [[package]]
-name = "brain-storm-certificate"
+name = "scoopdope-certificate"
 version = "0.1.0"
 dependencies = [
  "soroban-sdk",
 ]
 
 [[package]]
-name = "brain-storm-governance"
+name = "scoopdope-governance"
 version = "0.1.0"
 dependencies = [
  "soroban-sdk",
 ]
 
 [[package]]
-name = "brain-storm-shared"
+name = "scoopdope-shared"
 version = "0.1.0"
 dependencies = [
  "soroban-sdk",
 ]
 
 [[package]]
-name = "brain-storm-token"
+name = "scoopdope-token"
 version = "0.1.0"
 dependencies = [
  "proptest",

@@ -1,7 +1,7 @@
 apiVersion: chaos-mesh.org/v1alpha1
 kind: NetworkChaos
 metadata:
-  name: brain-storm-network-latency
+  name: scoopdope-network-latency
   namespace: default
 spec:
   action: delay
@@ -10,7 +10,7 @@ spec:
     namespaces:
       - default
     labelSelectors:
-      app: brain-storm-backend
+      app: scoopdope-backend
   delay:
     latency: "100ms"
     jitter: "10ms"
@@ -21,7 +21,7 @@ spec:
 apiVersion: chaos-mesh.org/v1alpha1
 kind: NetworkChaos
 metadata:
-  name: brain-storm-network-partition
+  name: scoopdope-network-partition
   namespace: default
 spec:
   action: partition
@@ -30,7 +30,7 @@ spec:
     namespaces:
       - default
     labelSelectors:
-      app: brain-storm-backend
+      app: scoopdope-backend
   direction: both
   duration: 3m
   scheduler:
@@ -39,7 +39,7 @@ spec:
 apiVersion: chaos-mesh.org/v1alpha1
 kind: PodChaos
 metadata:
-  name: brain-storm-pod-kill
+  name: scoopdope-pod-kill
   namespace: default
 spec:
   action: pod-kill
@@ -48,7 +48,7 @@ spec:
     namespaces:
       - default
     labelSelectors:
-      app: brain-storm-backend
+      app: scoopdope-backend
   duration: 1m
   scheduler:
     cron: "0 2 * * *"
@@ -56,7 +56,7 @@ spec:
 apiVersion: chaos-mesh.org/v1alpha1
 kind: PodChaos
 metadata:
-  name: brain-storm-pod-failure
+  name: scoopdope-pod-failure
   namespace: default
 spec:
   action: pod-failure
@@ -66,7 +66,7 @@ spec:
     namespaces:
       - default
     labelSelectors:
-      app: brain-storm-backend
+      app: scoopdope-backend
   duration: 2m
   scheduler:
     cron: "0 3 * * *"
@@ -74,7 +74,7 @@ spec:
 apiVersion: chaos-mesh.org/v1alpha1
 kind: StressChaos
 metadata:
-  name: brain-storm-cpu-stress
+  name: scoopdope-cpu-stress
   namespace: default
 spec:
   action: stress
@@ -83,7 +83,7 @@ spec:
     namespaces:
       - default
     labelSelectors:
-      app: brain-storm-backend
+      app: scoopdope-backend
   stressors:
     cpu:
       workers: 2

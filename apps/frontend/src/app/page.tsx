@@ -1,7 +1,7 @@
 export default function HomePage() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-8">
-      <h1 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">Brain-Storm</h1>
+      <h1 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">scoopdope</h1>
       <p className="text-lg text-gray-600 dark:text-gray-400 mb-8 text-center max-w-xl">
         Blockchain education platform built on the Stellar network. Earn verifiable on-chain
         credentials as you learn.

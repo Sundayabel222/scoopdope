@@ -66,7 +66,7 @@ jobs:
 
     environment:
       name: production
-      url: https://api.brain-storm.example.com
+      url: https://api.scoopdope.example.com
 
     outputs:
       deployment-id: ${{ steps.deployment.outputs.deployment-id }}
@@ -111,7 +111,7 @@ jobs:
 
     environment:
       name: production
-      url: https://api.brain-storm.example.com
+      url: https://api.scoopdope.example.com
 
     steps:
       - name: Checkout
@@ -121,7 +121,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          role-session-name: GitHubActions-BrainStorm-Production
+          role-session-name: GitHubActions-Scoopdope-Production
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Run database migrations
@@ -141,13 +141,13 @@ jobs:
           # Example ECS deployment:
           # aws ecs update-service \
           #   --cluster production \
-          #   --service brain-storm-backend \
+          #   --service scoopdope-backend \
           #   --force-new-deployment
 
       - name: Health check
         run: |
           for i in $(seq 1 30); do
-            if curl -sf https://api.brain-storm.example.com/health; then
+            if curl -sf https://api.scoopdope.example.com/health; then
               echo "✅ Health check passed"
               exit 0
             fi
@@ -168,7 +168,7 @@ jobs:
               deployment_id: ${{ needs.deploy-approval.outputs.deployment-id }},
               state: 'success',
               description: 'Successfully deployed to production',
-              environment_url: 'https://api.brain-storm.example.com',
+              environment_url: 'https://api.scoopdope.example.com',
             });
 
       - name: Deployment status - failure
@@ -202,7 +202,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          role-session-name: GitHubActions-BrainStorm-Rollback
+          role-session-name: GitHubActions-Scoopdope-Rollback
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Get previous release tag
@@ -231,7 +231,7 @@ jobs:
           # Example ECS rollback:
           # aws ecs update-service \
           #   --cluster production \
-          #   --service brain-storm-backend \
+          #   --service scoopdope-backend \
           #   --force-new-deployment
 
       - name: Notify rollback via release comment

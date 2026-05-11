@@ -3,7 +3,7 @@ global:
   evaluation_interval: 15s
 
 scrape_configs:
-  - job_name: 'brain-storm-backend'
+  - job_name: 'scoopdope-backend'
     static_configs:
       - targets: ['host.docker.internal:3000']
     metrics_path: '/metrics'

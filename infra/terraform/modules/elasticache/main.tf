@@ -1,15 +1,15 @@
 resource "aws_elasticache_subnet_group" "main" {
-  name       = "${var.environment}-brain-storm-redis-subnet"
+  name       = "${var.environment}-scoopdope-redis-subnet"
   subnet_ids = var.private_subnet_ids
 
   tags = {
-    Name        = "${var.environment}-brain-storm-redis-subnet"
+    Name        = "${var.environment}-scoopdope-redis-subnet"
     Environment = var.environment
   }
 }
 
 resource "aws_security_group" "redis" {
-  name        = "${var.environment}-brain-storm-redis-sg"
+  name        = "${var.environment}-scoopdope-redis-sg"
   description = "Security group for ElastiCache Redis"
   vpc_id      = var.vpc_id
 
@@ -28,14 +28,14 @@ resource "aws_security_group" "redis" {
   }
 
   tags = {
-    Name        = "${var.environment}-brain-storm-redis-sg"
+    Name        = "${var.environment}-scoopdope-redis-sg"
     Environment = var.environment
   }
 }
 
 resource "aws_elasticache_replication_group" "main" {
-  replication_group_id       = "${var.environment}-brain-storm-redis"
-  replication_group_description = "Redis cluster for Brain Storm ${var.environment}"
+  replication_group_id       = "${var.environment}-scoopdope-redis"
+  replication_group_description = "Redis cluster for Scoopdope ${var.environment}"
   
   engine               = "redis"
   engine_version       = "7.0"
@@ -55,7 +55,7 @@ resource "aws_elasticache_replication_group" "main" {
   snapshot_window          = "03:00-05:00"
 
   tags = {
-    Name        = "${var.environment}-brain-storm-redis"
+    Name        = "${var.environment}-scoopdope-redis"
     Environment = var.environment
   }
 }

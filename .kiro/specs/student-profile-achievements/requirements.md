@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This feature enhances the existing student profile page (`/profile`) in the Brain-Storm learning platform. The current page only shows basic user info and a wallet section. This spec adds a comprehensive learning journey view: enrolled courses with completion status, earned credentials and certificates, BST token balance with transaction history, an achievements/badges section derived from learning milestones, and a leaderboard ranking.
+This feature enhances the existing student profile page (`/profile`) in the scoopdope learning platform. The current page only shows basic user info and a wallet section. This spec adds a comprehensive learning journey view: enrolled courses with completion status, earned credentials and certificates, BST token balance with transaction history, an achievements/badges section derived from learning milestones, and a leaderboard ranking.
 
 The implementation is entirely frontend-side. All required data is already available through existing backend endpoints: `GET /users/:id/progress`, `GET /credentials/:userId`, `GET /users/:id/token-balance`, `GET /leaderboard`, `GET /users/:id/enrollments`, and `GET /stellar/balance/:publicKey`.
 
@@ -14,7 +14,7 @@ The implementation is entirely frontend-side. All required data is already avail
 - **TokenSection**: The UI section showing the student's BST token balance and a list of recent Stellar account transactions.
 - **AchievementsSection**: The UI section displaying earned badges derived from learning milestones (e.g., first course completed, 5 courses completed, 100 BST earned).
 - **LeaderboardSection**: The UI section showing the student's rank among all BST holders on the platform leaderboard.
-- **BST**: Brain-Storm Token — the platform's Stellar-based reward token.
+- **BST**: scoopdope Token — the platform's Stellar-based reward token.
 - **Credential**: A blockchain-anchored certificate issued when a student completes a course, stored in the `credentials` table and on the Stellar network.
 - **Achievement**: A badge awarded to a student when a specific milestone condition is met, computed client-side from existing data.
 - **ProgressRecord**: A record from `GET /users/:id/progress` containing `courseId` and `progressPct` (0–100).
