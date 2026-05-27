@@ -20,6 +20,16 @@ export class CreateCourseDto {
   @Trim()
   level?: string;
 
+  @IsOptional()
+  @IsString()
+  @Trim()
+  language?: string;
+
+  @IsOptional()
+  @IsString()
+  @Trim()
+  thumbnailUrl?: string;
+
   @IsOptional() @IsInt() @Min(0) durationHours?: number;
 
   @IsOptional() @IsBoolean() requiresKyc?: boolean;

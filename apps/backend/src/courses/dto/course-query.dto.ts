@@ -22,6 +22,13 @@ export class CourseQueryDto {
   @Sanitize(StripHtmlSanitizer)
   level?: string;
 
+  @ApiPropertyOptional({ description: 'Filter by BCP-47 language code (e.g. "en", "es", "fr")' })
+  @IsOptional()
+  @IsString()
+  @Trim()
+  @Sanitize(StripHtmlSanitizer)
+  language?: string;
+
   @ApiPropertyOptional({ default: 1, description: 'Page number (1-based)' })
   @IsOptional()
   @Type(() => Number)

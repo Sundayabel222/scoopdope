@@ -20,7 +20,17 @@ export class CoursesService {
   ) {}
 
   async findAll(query: CourseQueryDto = {}) {
-    const { search, level, page = 1, limit = 20 } = query;
+    const { search, level, language, page = 1, limit = 20 } = query;
+
+    // Cache key encodes all filter params; skip cache for search queries
+    const cacheKey = !search
+      ? `courses:catalog:${level ?? ''}:${language ?? ''}:${page}:${limit}`
+      : null;
+
+    if (cacheKey) {
+      const cached = await this.cacheManager.get(cacheKey);
+      if (cached) return cached;
+    }
 
     const qb = this.repo
       .createQueryBuilder('course')
@@ -35,6 +45,10 @@ export class CoursesService {
 
     if (level) {
       qb.andWhere('course.level = :level', { level });
+    }
+
+    if (language) {
+      qb.andWhere('course.language = :language', { language });
     }
 
     const total = await qb.clone().getCount();
@@ -58,7 +72,13 @@ export class CoursesService {
       averageRating: averageRatings.get(course.id) ?? 0,
     }));
 
-    return { data, total, page, limit };
+    const result = { data, total, page, limit };
+
+    if (cacheKey) {
+      await this.cacheManager.set(cacheKey, result, this.CACHE_TTL * 1000);
+    }
+
+    return result;
   }
 
   async findOne(id: string): Promise<Course> {
@@ -94,6 +114,8 @@ export class CoursesService {
 
   private async invalidateCache() {
     await this.cacheManager.del(this.CACHE_KEY);
+    // Invalidate catalog cache entries (pattern-based via store reset)
+    await this.cacheManager.reset().catch(() => {});
   }
 
   async scheduleCourse(id: string, scheduledAt: Date): Promise<Course> {

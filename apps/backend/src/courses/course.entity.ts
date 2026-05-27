@@ -31,6 +31,10 @@ export class Course {
   @Column({ default: 'beginner' })
   level: string;
 
+  /** BCP-47 language code, e.g. "en", "es", "fr", "ar" */
+  @Column({ default: 'en' })
+  language: string;
+
   @Column({ default: 0 })
   durationHours: number;
 
@@ -49,6 +53,9 @@ export class Course {
 
   @Column({ nullable: true })
   instructorId: string;
+
+  @Column({ nullable: true })
+  thumbnailUrl: string;
 
   @Column({ nullable: true, type: 'timestamptz' })
   scheduledAt: Date | null;

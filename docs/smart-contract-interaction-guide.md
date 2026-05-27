@@ -13,10 +13,13 @@ This guide covers how to interact with the scoopdope Soroban smart contracts dep
 5. [Certificate Contract](#5-certificate-contract)
 6. [Governance Contract](#6-governance-contract)
 7. [Shared Contract (RBAC)](#7-shared-contract-rbac)
-8. [Invoking Contracts from the Backend](#8-invoking-contracts-from-the-backend)
-9. [Invoking Contracts from the Frontend](#9-invoking-contracts-from-the-frontend)
-10. [Error Handling Patterns](#10-error-handling-patterns)
-11. [Troubleshooting](#11-troubleshooting)
+8. [Badges Contract](#8-badges-contract)
+9. [Reputation Contract](#9-reputation-contract)
+10. [NFT Contract](#10-nft-contract)
+11. [Invoking Contracts from the Backend](#11-invoking-contracts-from-the-backend)
+12. [Invoking Contracts from the Frontend](#12-invoking-contracts-from-the-frontend)
+13. [Error Codes Reference](#13-error-codes-reference)
+14. [Troubleshooting](#14-troubleshooting)
 
 ---
 
@@ -117,6 +120,9 @@ async function simulateContract(
 | Certificate | `CERTIFICATE_CONTRACT_ID` | Soulbound NFT certificates for course completion |
 | Governance | `GOVERNANCE_CONTRACT_ID` | Token-weighted proposal voting |
 | Shared | `SHARED_CONTRACT_ID` | RBAC — roles and permissions |
+| Badges | `BADGES_CONTRACT_ID` | Achievement badges minted to students |
+| Reputation | `REPUTATION_CONTRACT_ID` | On-chain reputation scores with decay |
+| NFT | `NFT_CONTRACT_ID` | Course access NFTs with royalty distribution |
 
 All contracts require an `initialize(admin)` call once after deployment. Double-initialization panics with `"Already initialized"`.
 
@@ -391,7 +397,161 @@ const hasPermission = retval?.value() === true;
 
 ---
 
-## 8. Invoking Contracts from the Backend
+## 8. Badges Contract
+
+Achievement badges are minted to students when they reach milestones (e.g. first course completed, 10 courses completed). Each badge has a `badge_type` symbol and an auto-incrementing `u64` ID.
+
+### Public Interface
+
+| Function | Auth Required | Description |
+|---|---|---|
+| `initialize(admin)` | admin | One-time setup |
+| `create_badge_type(admin, name, description)` | admin | Register a new badge type |
+| `mint_badge(admin, owner, badge_type)` | admin | Mint a badge to a student, returns `u64` ID |
+| `get_badge(id)` | none | Fetch badge by ID → `Option<BadgeRecord>` |
+| `get_badges_by_owner(owner)` | none | All badge IDs for an address |
+| `get_badge_type(name)` | none | Fetch badge type metadata |
+
+**`BadgeRecord` shape:**
+```
+{ id: u64, owner, badge_type: Symbol, minted_at: u64 }
+```
+
+### TypeScript Examples
+
+```typescript
+const BADGES = process.env.BADGES_CONTRACT_ID!;
+
+// Mint a badge (admin signs)
+await invokeContract(BADGES, 'mint_badge', [
+  new Address(issuerKeypair.publicKey()).toScVal(),  // admin
+  new Address(studentPublicKey).toScVal(),           // owner
+  nativeToScVal('first_course', { type: 'symbol' }), // badge_type
+]);
+
+// Fetch all badges for a student (simulate)
+const retval = await simulateContract(BADGES, 'get_badges_by_owner', [
+  new Address(studentPublicKey).toScVal(),
+]);
+```
+
+### Rust Cross-Contract Call
+
+```rust
+let badge_ids: Vec<u64> = env.invoke_contract(
+    &badges_contract_id,
+    &soroban_sdk::symbol_short!("get_badges"),
+    soroban_sdk::vec![&env, owner.into_val(&env)],
+);
+```
+
+### Stellar CLI
+
+```bash
+stellar contract invoke \
+  --id $BADGES_CONTRACT_ID \
+  --network testnet \
+  --source dev-account \
+  -- mint_badge \
+  --admin $(stellar keys address dev-account) \
+  --owner GSTUDENT... \
+  --badge_type first_course
+```
+
+---
+
+## 9. Reputation Contract
+
+Tracks on-chain reputation scores for students. Scores increase on course completion, reviews, and rewards, and decay over time based on a configurable decay config.
+
+### Public Interface
+
+| Function | Auth Required | Description |
+|---|---|---|
+| `initialize(admin)` | admin | One-time setup |
+| `update_reputation(admin, user, score_change, reason, course_id)` | admin | Add/subtract reputation |
+| `apply_decay(admin, user)` | admin | Apply time-based decay to a user's score |
+| `get_reputation(user)` | none | Fetch `ReputationRecord` |
+| `get_history(user)` | none | Fetch reputation update history |
+| `get_total_reputation()` | none | Platform-wide total reputation |
+
+**`ReputationRecord` shape:**
+```
+{ user, score: i128, level: u8, last_updated: u32, total_updates: u32 }
+```
+
+**Reason symbols:** `course_complete`, `review`, `decay`, `reward`
+
+### TypeScript Examples
+
+```typescript
+const REP = process.env.REPUTATION_CONTRACT_ID!;
+
+// Award reputation on course completion
+await invokeContract(REP, 'update_reputation', [
+  new Address(issuerKeypair.publicKey()).toScVal(),       // admin
+  new Address(studentPublicKey).toScVal(),                // user
+  nativeToScVal(100n, { type: 'i128' }),                  // score_change
+  nativeToScVal('course_complete', { type: 'symbol' }),   // reason
+  nativeToScVal(null),                                    // course_id (Option<u64>)
+]);
+
+// Read reputation (simulate)
+const retval = await simulateContract(REP, 'get_reputation', [
+  new Address(studentPublicKey).toScVal(),
+]);
+```
+
+---
+
+## 10. NFT Contract
+
+Course access NFTs allow students to purchase permanent access to a course. Each NFT carries royalty metadata so instructors receive a share of secondary sales.
+
+### Public Interface
+
+| Function | Auth Required | Description |
+|---|---|---|
+| `initialize(admin)` | admin | One-time setup |
+| `mint_nft(admin, owner, course_id, course_name, royalty_basis)` | admin | Mint course access NFT, returns `u32` ID |
+| `transfer_nft(from, to, nft_id)` | from | Transfer NFT (royalty paid on transfer) |
+| `get_nft(nft_id)` | none | Fetch `NFTMetadata` |
+| `get_nfts_by_owner(owner)` | none | All NFT IDs for an address |
+| `has_access(nft_id, holder)` | none | Check if address has course access |
+| `get_royalty_info(nft_id)` | none | Fetch royalty basis points and recipient |
+
+**`NFTMetadata` shape:**
+```
+{ nft_id: u32, course_id: Symbol, course_name: String, owner, purchase_date: u64, royalty_basis: u32 }
+```
+
+> **Royalty basis points:** `500` = 5%. Applied on secondary transfers, paid to the original instructor.
+
+### TypeScript Examples
+
+```typescript
+const NFT = process.env.NFT_CONTRACT_ID!;
+
+// Mint course access NFT
+await invokeContract(NFT, 'mint_nft', [
+  new Address(issuerKeypair.publicKey()).toScVal(),
+  new Address(studentPublicKey).toScVal(),
+  nativeToScVal('RUST101', { type: 'symbol' }),
+  nativeToScVal('Introduction to Rust', { type: 'string' }),
+  nativeToScVal(500, { type: 'u32' }),  // 5% royalty
+]);
+
+// Check course access
+const retval = await simulateContract(NFT, 'has_access', [
+  nativeToScVal(1, { type: 'u32' }),   // nft_id
+  new Address(studentPublicKey).toScVal(),
+]);
+const hasAccess = retval?.value() === true;
+```
+
+---
+
+## 11. Invoking Contracts from the Backend
 
 The `StellarService` in `apps/backend/src/stellar/stellar.service.ts` is the central integration point. Extend it for new contract calls.
 
@@ -448,7 +608,7 @@ return result;
 
 ---
 
-## 9. Invoking Contracts from the Frontend
+## 12. Invoking Contracts from the Frontend
 
 The frontend should only call **read-only** (simulate) operations directly. State-changing operations that require the user's wallet signature use Freighter or a compatible Stellar wallet.
 
@@ -528,7 +688,24 @@ async function castVote(proposalId: bigint, support: boolean) {
 
 ---
 
-## 10. Error Handling Patterns
+## 13. Error Codes Reference
+
+### Panic Strings → HTTP Errors
+
+| Contract panic string | HTTP status | Meaning |
+|---|---|---|
+| `"Already initialized"` | 409 Conflict | Contract already initialized |
+| `"Unauthorized"` | 403 Forbidden | Caller not authorized |
+| `"Only admin"` | 403 Forbidden | Admin authorization required |
+| `"Progress must be 0-100"` | 400 Bad Request | Progress value out of range |
+| `"Insufficient balance"` | 400 Bad Request | Insufficient token balance |
+| `"Already voted"` | 409 Conflict | Address has already voted |
+| `"Voting period ended"` | 400 Bad Request | Voting period has closed |
+| `"Proposal did not pass"` | 400 Bad Request | Proposal did not reach quorum |
+| `"soulbound"` | 400 Bad Request | Certificates are non-transferable |
+| `"reentrant call"` | 500 Internal | Reentrancy guard triggered |
+| `"No voting power"` | 400 Bad Request | Voter holds zero BST |
+| `"Max supply reached"` | 400 Bad Request | Token mint would exceed 1B BST |
 
 ### Contract Panics → TypeScript Errors
 
@@ -582,7 +759,7 @@ const result = await Promise.race([
 
 ---
 
-## 11. Troubleshooting
+## 14. Troubleshooting
 
 ### `"Already initialized"` on deploy
 

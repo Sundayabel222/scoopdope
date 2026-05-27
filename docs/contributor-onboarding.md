@@ -7,11 +7,12 @@ Welcome to scoopdope! This guide gets you from zero to your first merged pull re
 ## Table of Contents
 
 1. [Project Structure](#1-project-structure)
-2. [Local Development Setup](#2-local-development-setup)
-3. [Your First Contribution](#3-your-first-contribution)
-4. [Code Walkthroughs](#4-code-walkthroughs)
-5. [Good First Issues](#5-good-first-issues)
-6. [Getting Help](#6-getting-help)
+2. [Architecture Overview](#2-architecture-overview)
+3. [Local Development Setup](#3-local-development-setup)
+4. [Your First Contribution](#4-your-first-contribution)
+5. [Code Walkthroughs](#5-code-walkthroughs)
+6. [Good First Issues & Labeling System](#6-good-first-issues--labeling-system)
+7. [Getting Help](#7-getting-help)
 
 ---
 
@@ -67,7 +68,89 @@ scoopdope/
 
 ---
 
-## 2. Local Development Setup
+## 2. Architecture Overview
+
+Understanding the data flow helps you know where to make changes without breaking other parts of the system.
+
+### Request lifecycle (REST API)
+
+```
+Browser / Mobile
+    │
+    ▼
+Next.js Frontend (port 3001)
+    │  fetch() / Axios via NEXT_PUBLIC_API_URL
+    ▼
+NestJS Backend (port 3000)
+    ├── JWT Guard → validates Bearer token
+    ├── Roles Guard → checks user role (admin / instructor / student)
+    ├── Validation Pipe → validates & sanitizes DTOs
+    ├── Service layer → business logic, DB queries, cache
+    │       ├── TypeORM → PostgreSQL
+    │       ├── CacheManager → Redis (60s TTL for catalog)
+    │       └── StellarService → Soroban RPC
+    └── Response Interceptor → wraps { data, statusCode, timestamp }
+```
+
+### Credential issuance flow
+
+This is the most important business flow. When a student completes a course:
+
+```
+Student marks lesson complete
+    │
+    ▼
+ProgressService.record()
+    ├── Saves progress to PostgreSQL
+    ├── StellarService.recordProgress()   → Analytics contract (on-chain)
+    └── if progress == 100%:
+          CredentialsService.issue()
+              ├── KYC gate (if course.requiresKyc)
+              ├── StellarService.issueCredential()  → Horizon + Certificate contract
+              └── StellarService.mintReward()        → Token contract (100 BST)
+```
+
+### Smart contract architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    Soroban Contracts                     │
+│                                                         │
+│  Analytics ──────────────────────────────────────────┐  │
+│  (progress tracking)                                 │  │
+│                                                      │  │
+│  Token (BST) ────────────────────────────────────┐   │  │
+│  (SEP-0041 fungible token, vesting, staking)     │   │  │
+│                                                  │   │  │
+│  Certificate ────────────────────────────────┐   │   │  │
+│  (soulbound NFTs)                            │   │   │  │
+│                                              ▼   ▼   ▼  │
+│  Governance ──────────────────────► Shared (RBAC)       │
+│  (token-weighted voting)            roles & permissions  │
+│                                                         │
+│  Badges / Reputation / NFT ─────────────────────────┘  │
+│  (achievements, scores, course access)                  │
+└─────────────────────────────────────────────────────────┘
+```
+
+All contracts are deployed independently. The Governance contract holds a reference to the Token contract for reading voting power. The Shared contract is used by the backend to verify roles before issuing credentials.
+
+### Frontend state management
+
+```
+Zustand stores (src/store/)
+    ├── auth.store.ts      — JWT token, user profile, login/logout
+    ├── courses.store.ts   — course list, current course
+    ├── progress.store.ts  — lesson completion state
+    └── bookmarks.store.ts — bookmarked courses (persisted to localStorage)
+
+API calls go through src/lib/api.ts (Axios instance with JWT interceptor).
+Auth state is also exposed via src/lib/auth-context.tsx for React context consumers.
+```
+
+---
+
+## 3. Local Development Setup
 
 ### Prerequisites
 
@@ -154,7 +237,7 @@ stellar keys show dev-account   # starts with S...
 
 ---
 
-## 3. Your First Contribution
+## 4. Your First Contribution
 
 This is a complete walkthrough of the contribution lifecycle using a real example: **adding a `category` field to courses**.
 
@@ -251,11 +334,11 @@ Reviewers will leave comments. Push additional commits to the same branch — th
 
 ---
 
-## 4. Code Walkthroughs
+## 5. Code Walkthroughs
 
 These walkthroughs show how the most common tasks are implemented so you can follow the same patterns.
 
-### 4a. Adding a new API endpoint (backend)
+### 5a. Adding a new API endpoint (backend)
 
 The pattern is: **entity → service → controller → module**.
 
@@ -320,7 +403,7 @@ export class CoursesModule {}
 
 To add a new endpoint: add the method to the service, add the route to the controller with appropriate guards and Swagger decorators, and register any new entities in the module's `TypeOrmModule.forFeature([...])`.
 
-### 4b. The credential issuance flow
+### 5b. The credential issuance flow
 
 This is the most important business flow — understanding it helps with any blockchain-related work.
 
@@ -340,7 +423,7 @@ Key files:
 - `credentials/credentials.service.ts` — orchestrates issuance + KYC check
 - `stellar/stellar.service.ts` — all Soroban contract calls and Horizon interactions
 
-### 4c. Adding a new Soroban contract call (backend)
+### 5c. Adding a new Soroban contract call (backend)
 
 All contract interactions go through `StellarService`. Follow this pattern:
 
@@ -370,7 +453,7 @@ async setMyData(publicKey: string, value: string): Promise<string> {
 
 Add the new contract ID to `.env.example`, `config/configuration.ts`, and `config/validation.schema.ts`. See [smart-contract-interaction-guide.md](./smart-contract-interaction-guide.md) for the full reference.
 
-### 4d. Adding a frontend page
+### 5d. Adding a frontend page
 
 Pages live under `src/app/` following Next.js App Router conventions. The API client is in `src/lib/api.ts` and state is managed with Zustand stores in `src/store/`.
 
@@ -392,7 +475,7 @@ export default function CoursesPage() {
 
 Protected routes wrap content with `<ProtectedRoute>` from `src/components/ProtectedRoute.tsx`. Auth state comes from the Zustand `auth.store.ts` and `src/lib/auth-context.tsx`.
 
-### 4e. Writing a test
+### 5e. Writing a test
 
 **Unit test** (backend) — mock dependencies with Jest:
 
@@ -445,13 +528,32 @@ Run with `cargo test` from the repo root.
 
 ---
 
-## 5. Good First Issues
+## 6. Good First Issues & Labeling System
 
-Look for these labels on GitHub:
+### GitHub Labels
 
-- [`good first issue`](https://github.com/BrainTease/scoopdope/issues?q=is%3Aopen+label%3A%22good+first+issue%22) — scoped, well-defined tasks ideal for first contributions
-- [`docs`](https://github.com/BrainTease/scoopdope/issues?q=is%3Aopen+label%3Adocs) — documentation improvements, no code required
-- [`bug`](https://github.com/BrainTease/scoopdope/issues?q=is%3Aopen+label%3Abug) — confirmed bugs with reproduction steps
+We use a structured labeling system to help contributors find the right issues:
+
+| Label | Color | Meaning |
+|---|---|---|
+| `good first issue` | green | Scoped, well-defined — ideal for first contributions |
+| `help wanted` | blue | Maintainers welcome external contributions |
+| `bug` | red | Confirmed bug with reproduction steps |
+| `docs` | yellow | Documentation improvements, no code required |
+| `feat` | purple | New feature request |
+| `performance` | orange | Performance improvement |
+| `security` | dark red | Security-related — discuss privately first |
+| `backend` | teal | Affects NestJS backend |
+| `frontend` | cyan | Affects Next.js frontend |
+| `contracts` | indigo | Affects Soroban smart contracts |
+| `i18n` | pink | Internationalization / translation |
+| `blocked` | grey | Waiting on another issue or external dependency |
+
+### Finding good first issues
+
+```
+https://github.com/BrainTease/scoopdope/issues?q=is%3Aopen+label%3A%22good+first+issue%22
+```
 
 ### What makes a good first issue?
 
@@ -464,9 +566,17 @@ Look for these labels on GitHub:
 
 If you spot something — a missing validation, a typo in an error message, a missing Swagger description — open an issue first with the `good first issue` label and describe the fix. Maintainers will confirm scope before you start coding.
 
+### Labeling guidelines for maintainers
+
+When triaging new issues:
+1. Apply at least one **area** label (`backend`, `frontend`, `contracts`, `docs`).
+2. Apply a **type** label (`bug`, `feat`, `docs`, `performance`).
+3. If the issue is suitable for new contributors, add `good first issue` and write clear acceptance criteria.
+4. If the issue is blocked, add `blocked` and link the blocking issue in a comment.
+
 ---
 
-## 6. Getting Help
+## 7. Getting Help
 
 - **Stuck on setup?** Check the [troubleshooting table](#troubleshooting) above, then open a [GitHub Discussion](https://github.com/BrainTease/scoopdope/discussions).
 - **Question about a specific file?** Leave a comment on the relevant issue or PR.

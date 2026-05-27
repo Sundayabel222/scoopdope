@@ -43,6 +43,11 @@ export class CoursesController {
     description: 'Filter by level',
   })
   @ApiQuery({
+    name: 'language',
+    required: false,
+    description: 'Filter by BCP-47 language code (e.g. "en", "es", "fr", "ar")',
+  })
+  @ApiQuery({
     name: 'page',
     required: false,
     type: Number,

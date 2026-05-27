@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import useSWRInfinite from 'swr/infinite';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { useBookmarksStore } from '@/store/bookmarks.store';
 import { useCompareStore } from '@/store/compare.store';
@@ -19,12 +20,14 @@ type Course = {
   id: string;
   title: string;
   level: 'beginner' | 'intermediate' | 'advanced';
+  language?: string;
   category?: string;
   durationHours?: number;
   price?: number;
   rating?: number;
   enrollments?: number;
   description?: string;
+  thumbnailUrl?: string;
 };
 
 type CoursesResponse = { data: Course[]; total: number; page: number; limit: number };
@@ -33,6 +36,12 @@ type SortOption = 'newest' | 'popular' | 'rating';
 
 const LEVELS = ['beginner', 'intermediate', 'advanced'] as const;
 const CATEGORIES = ['Blockchain', 'DeFi', 'Smart Contracts', 'Web3', 'Stellar'] as const;
+const LANGUAGES = [
+  { label: 'English', value: 'en' },
+  { label: 'Spanish', value: 'es' },
+  { label: 'French', value: 'fr' },
+  { label: 'Arabic', value: 'ar' },
+] as const;
 const DURATIONS = [
   { label: '< 2h', value: '0-2' },
   { label: '2–5h', value: '2-5' },
@@ -177,6 +186,7 @@ export default function CoursesPage() {
   // Read initial state from URL
   const [query, setQuery] = useState(() => searchParams.get('search') ?? '');
   const [level, setLevel] = useState(() => searchParams.get('level') ?? '');
+  const [language, setLanguage] = useState(() => searchParams.get('language') ?? '');
   const [category, setCategory] = useState(() => searchParams.get('category') ?? '');
   const [duration, setDuration] = useState(() => searchParams.get('duration') ?? '');
   const [sort, setSort] = useState<SortOption>(() => (searchParams.get('sort') as SortOption) ?? 'newest');
@@ -189,17 +199,19 @@ export default function CoursesPage() {
       const p = new URLSearchParams();
       const q = overrides.search ?? debouncedQuery;
       const l = overrides.level ?? level;
+      const lang = overrides.language ?? language;
       const c = overrides.category ?? category;
       const d = overrides.duration ?? duration;
       const s = overrides.sort ?? sort;
       if (q.trim()) p.set('search', q.trim());
       if (l) p.set('level', l);
+      if (lang) p.set('language', lang);
       if (c) p.set('category', c);
       if (d) p.set('duration', d);
       if (s !== 'newest') p.set('sort', s);
       router.push(`/courses?${p.toString()}`, { scroll: false });
     },
-    [debouncedQuery, level, category, duration, sort, router]
+    [debouncedQuery, level, language, category, duration, sort, router]
   );
 
   // Push URL on debounced query change
@@ -209,13 +221,14 @@ export default function CoursesPage() {
     pushUrl({ search: debouncedQuery });
   }, [debouncedQuery]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const filterKey = `${debouncedQuery}-${level}-${category}-${duration}-${sort}`;
+  const filterKey = `${debouncedQuery}-${level}-${language}-${category}-${duration}-${sort}`;
 
   const getKey = (pageIndex: number, previousPageData: CoursesResponse | null) => {
     if (previousPageData && previousPageData.data.length === 0) return null; // reached the end
     const p = new URLSearchParams();
     if (debouncedQuery.trim()) p.set('search', debouncedQuery.trim());
     if (level) p.set('level', level);
+    if (language) p.set('language', language);
     if (category) p.set('category', category);
     if (duration) { const [min, max] = duration.split('-'); p.set('durationMin', min); p.set('durationMax', max); }
     p.set('sort', sort);
@@ -259,6 +272,7 @@ export default function CoursesPage() {
   function applyFilter(key: string, value: string) {
     const updates: Record<string, string> = { [key]: value };
     if (key === 'level') setLevel(value);
+    if (key === 'language') setLanguage(value);
     if (key === 'category') setCategory(value);
     if (key === 'duration') setDuration(value);
     if (key === 'sort') setSort(value as SortOption);
@@ -268,13 +282,14 @@ export default function CoursesPage() {
   // Active filter chips
   const activeFilters: { label: string; clear: () => void }[] = [
     ...(level ? [{ label: `Level: ${level}`, clear: () => applyFilter('level', '') }] : []),
+    ...(language ? [{ label: `Language: ${LANGUAGES.find((l) => l.value === language)?.label ?? language}`, clear: () => applyFilter('language', '') }] : []),
     ...(category ? [{ label: `Category: ${category}`, clear: () => applyFilter('category', '') }] : []),
     ...(duration ? [{ label: `Duration: ${DURATIONS.find((d) => d.value === duration)?.label ?? duration}`, clear: () => applyFilter('duration', '') }] : []),
     ...(sort !== 'newest' ? [{ label: `Sort: ${SORT_OPTIONS.find((s) => s.value === sort)?.label}`, clear: () => applyFilter('sort', 'newest') }] : []),
   ];
 
   const clearAll = () => {
-    setLevel(''); setCategory(''); setDuration(''); setSort('newest');
+    setLevel(''); setLanguage(''); setCategory(''); setDuration(''); setSort('newest');
     router.push('/courses', { scroll: false });
   };
 
@@ -304,6 +319,13 @@ export default function CoursesPage() {
             aria-label="Filter by level">
             <option value="">All Levels</option>
             {LEVELS.map((l) => <option key={l} value={l}>{l.charAt(0).toUpperCase() + l.slice(1)}</option>)}
+          </select>
+
+          <select value={language} onChange={(e) => applyFilter('language', e.target.value)}
+            className="rounded-lg border border-gray-300 dark:border-gray-700 px-3 py-2 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-gray-100"
+            aria-label="Filter by language">
+            <option value="">All Languages</option>
+            {LANGUAGES.map((l) => <option key={l.value} value={l.value}>{l.label}</option>)}
           </select>
 
           <select value={category} onChange={(e) => applyFilter('category', e.target.value)}
@@ -354,16 +376,30 @@ export default function CoursesPage() {
             : courses.map((course, index) => (
                 <div
                   key={course.id}
-                  className="border border-gray-200 dark:border-gray-700 rounded-lg p-5 bg-white dark:bg-gray-900 flex flex-col gap-2"
+                  className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-900 flex flex-col gap-2"
                   ref={index === courses.length - 1 ? observerRef : null}
                   role="gridcell"
                 >
+                  {course.thumbnailUrl && (
+                    <div className="relative w-full h-36">
+                      <Image
+                        src={course.thumbnailUrl}
+                        alt={course.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+                  )}
+                  <div className="p-5 flex flex-col gap-2 flex-1">
                   <div className="flex items-start justify-between gap-2">
                     <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 leading-snug">{course.title}</h2>
                     <BookmarkButton course={course} />
                   </div>
                   <div className="flex flex-wrap gap-1.5 text-xs text-gray-500 dark:text-gray-400">
                     <span className="capitalize">{course.level}</span>
+                    {course.language && <><span>·</span><span className="uppercase">{course.language}</span></>}
                     {course.category && <><span>·</span><span>{course.category}</span></>}
                     {course.durationHours != null && <><span>·</span><span>{course.durationHours}h</span></>}
                     {course.rating != null && <><span>·</span><span>★ {course.rating}</span></>}
@@ -381,6 +417,7 @@ export default function CoursesPage() {
                     <Link href={`/courses/${course.id}`} className="text-sm text-blue-600 dark:text-blue-400 hover:underline ml-auto">
                       View →
                     </Link>
+                  </div>
                   </div>
                 </div>
               ))}
