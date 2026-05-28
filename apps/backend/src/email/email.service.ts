@@ -146,6 +146,21 @@ export class EmailService implements OnModuleInit {
     await this.enqueue(payload.userEmail, tpl.subject, tpl.html);
   }
 
+  @OnEvent('module.unlocked')
+  async onModuleUnlocked(payload: { userId: string; userEmail: string; userName: string; courseId: string; courseTitle: string; moduleTitle: string }) {
+    const prefs = await this.getOrCreatePrefs(payload.userId);
+    if (prefs.unsubscribedAll || !prefs.enrollment) return;
+
+    const tpl = emailTemplates.moduleUnlocked({
+      userName: payload.userName,
+      courseTitle: payload.courseTitle,
+      moduleTitle: payload.moduleTitle,
+      courseUrl: `${this.config.get('frontend.url')}/courses/${payload.courseId}`,
+      unsubscribeUrl: this.unsubscribeUrl(prefs.unsubscribeToken),
+    });
+    await this.enqueue(payload.userEmail, tpl.subject, tpl.html);
+  }
+
   // --- Preferences management ---
 
   async getPreferences(userId: string) {
