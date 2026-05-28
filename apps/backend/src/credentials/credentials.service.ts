@@ -37,7 +37,17 @@ export class CredentialsService {
       }
     }
 
-    const txHash = await this.stellarService.issueCredential(stellarPublicKey, courseId);
+    const metadata = {
+      courseName: course.title,
+      grade: 'Pass', // Could be calculated from quiz scores if available
+      skills: course.skills || [],
+    };
+
+    const txHash = await this.stellarService.issueCredential(
+      stellarPublicKey,
+      courseId,
+      metadata
+    );
 
     // Mint reward tokens after credential issuance
     try {
@@ -46,12 +56,22 @@ export class CredentialsService {
       // Non-fatal
     }
 
-    const credential = this.repo.create({ userId, courseId, txHash, stellarPublicKey });
+    const credential = this.repo.create({
+      userId,
+      courseId,
+      txHash,
+      stellarPublicKey,
+      grade: metadata.grade,
+    });
     return this.repo.save(credential);
   }
 
-  findByUser(userId: string) {
-    return this.repo.find({ where: { userId }, order: { issuedAt: 'DESC' } });
+  async findByUser(userId: string) {
+    return this.repo.find({
+      where: { userId },
+      relations: ['course'],
+      order: { issuedAt: 'DESC' },
+    });
   }
 
   async findOne(id: string) {

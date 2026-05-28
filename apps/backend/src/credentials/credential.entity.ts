@@ -34,6 +34,12 @@ export class Credential {
   @Column({ nullable: true })
   stellarPublicKey: string;
 
+  @Column({ nullable: true })
+  grade: string;
+
+  @Column({ nullable: true })
+  onChainId: string;
+
   @CreateDateColumn()
   issuedAt: Date;
 }
