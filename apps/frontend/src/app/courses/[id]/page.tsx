@@ -6,6 +6,7 @@ import { ReviewList } from '@/components/reviews/ReviewList';
 import { QAPanel } from '@/components/courses/QAPanel';
 import { AnnouncementsPanel } from '@/components/courses/AnnouncementsPanel';
 import { AssignmentsTab } from '@/components/assignments/AssignmentsTab';
+import { PrerequisitesPanel } from '@/components/courses/PrerequisitesPanel';
 import { useAuth } from '@/hooks/useAuth';
 import { useCompareStore } from '@/store/compare.store';
 import api from '@/lib/api';
@@ -85,6 +86,7 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
       {tab === 'overview' && (
         <div className="space-y-4">
           <p className="text-gray-600">Course content and details would appear here.</p>
+          {!isInstructor && <PrerequisitesPanel courseId={courseId} />}
           {!isInstructor && (
             <button
               onClick={handleEnroll}
