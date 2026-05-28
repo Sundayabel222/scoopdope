@@ -1,4 +1,49 @@
 const createNextIntlPlugin = require('next-intl/plugin');
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  disable: process.env.NODE_ENV === 'development',
+  register: true,
+  skipWaiting: true,
+  fallbacks: {
+    document: '/offline',
+  },
+  runtimeCaching: [
+    {
+      urlPattern: /^https:\/\/.*\.(?:png|jpg|jpeg|svg|gif|webp)$/i,
+      handler: 'CacheFirst',
+      options: {
+        cacheName: 'images',
+        expiration: {
+          maxEntries: 100,
+          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+        },
+      },
+    },
+    {
+      urlPattern: /\/courses\/.*/,
+      handler: 'NetworkFirst',
+      options: {
+        cacheName: 'course-pages',
+        expiration: {
+          maxEntries: 50,
+          maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
+        },
+      },
+    },
+    {
+      urlPattern: /\/api\/.*/,
+      handler: 'NetworkFirst',
+      options: {
+        cacheName: 'api-responses',
+        networkTimeoutSeconds: 10,
+        expiration: {
+          maxEntries: 50,
+          maxAgeSeconds: 24 * 60 * 60, // 1 day
+        },
+      },
+    },
+  ],
+});
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
@@ -52,4 +97,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withNextIntl(nextConfig);
+module.exports = withPWA(withNextIntl(nextConfig));

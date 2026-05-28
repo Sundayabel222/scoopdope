@@ -66,6 +66,13 @@ export class Course {
   @Column({ nullable: true, type: 'timestamptz' })
   publishedAt: Date | null;
 
+  /**
+   * Maximum number of students that can be enrolled simultaneously.
+   * Null means unlimited.
+   */
+  @Column({ nullable: true, type: 'int' })
+  maxEnrollment: number | null;
+
   @ManyToOne(() => User, { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn({ name: 'instructorId' })
   instructor: User;

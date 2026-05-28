@@ -4,20 +4,24 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import api from '@/lib/api';
 import { TranscriptDisplay } from '@/components/courses/TranscriptDisplay';
-import { ChevronLeft, ChevronRight, Layout } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Layout, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useVideoShortcuts } from '@/hooks/useVideoShortcuts';
+import { useSyncProgress } from '@/hooks/useSyncProgress';
 
 export default function LessonPage() {
   const params = useParams();
   const router = useRouter();
-  const courseId = params?.id;
-  const lessonId = params?.lessonId;
+  const courseId = params?.id as string;
+  const lessonId = params?.lessonId as string;
   
   const [lesson, setLesson] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [currentTime, setCurrentTime] = useState(0);
+  const [isCompleting, setIsCompleting] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  const { recordProgress } = useSyncProgress();
 
   useVideoShortcuts(videoRef);
 
@@ -50,6 +54,19 @@ export default function LessonPage() {
     }
   };
 
+  const handleComplete = async () => {
+    if (!courseId || !lessonId) return;
+    setIsCompleting(true);
+    try {
+      await recordProgress(courseId, lessonId, 100);
+      setLesson((prev: any) => ({ ...prev, completed: true }));
+    } catch (error) {
+      console.error('Failed to mark lesson as complete:', error);
+    } finally {
+      setIsCompleting(false);
+    }
+  };
+
   if (loading) return <div className="p-8 text-center">Loading lesson...</div>;
   if (!lesson) return <div className="p-8 text-center">Lesson not found.</div>;
 
@@ -65,6 +82,21 @@ export default function LessonPage() {
           <h1 className="text-lg font-bold">{lesson.title}</h1>
         </div>
         <div className="flex items-center gap-2">
+          <Button
+            variant={lesson.completed ? 'success' : 'primary'}
+            size="sm"
+            onClick={handleComplete}
+            disabled={isCompleting || lesson.completed}
+          >
+            {lesson.completed ? (
+              <>
+                <CheckCircle className="w-4 h-4 mr-2" />
+                Completed
+              </>
+            ) : (
+              'Mark as Complete'
+            )}
+          </Button>
           <Button variant="outline" size="sm">
             <ChevronLeft className="w-4 h-4" />
           </Button>

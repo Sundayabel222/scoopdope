@@ -146,6 +146,35 @@ export class EmailService implements OnModuleInit {
     await this.enqueue(payload.userEmail, tpl.subject, tpl.html);
   }
 
+  @OnEvent('waitlist.joined')
+  async onWaitlistJoined(payload: { userId: string; userEmail: string; userName: string; courseId: string; courseTitle: string; position: number }) {
+    const prefs = await this.getOrCreatePrefs(payload.userId);
+    if (prefs.unsubscribedAll || !prefs.enrollment) return;
+
+    const tpl = emailTemplates.waitlistJoined({
+      userName: payload.userName,
+      courseTitle: payload.courseTitle,
+      position: payload.position,
+      courseUrl: `${this.config.get('frontend.url')}/courses/${payload.courseId}`,
+      unsubscribeUrl: this.unsubscribeUrl(prefs.unsubscribeToken),
+    });
+    await this.enqueue(payload.userEmail, tpl.subject, tpl.html);
+  }
+
+  @OnEvent('waitlist.enrolled')
+  async onWaitlistEnrolled(payload: { userId: string; userEmail: string; userName: string; courseId: string; courseTitle: string }) {
+    const prefs = await this.getOrCreatePrefs(payload.userId);
+    if (prefs.unsubscribedAll || !prefs.enrollment) return;
+
+    const tpl = emailTemplates.waitlistEnrolled({
+      userName: payload.userName,
+      courseTitle: payload.courseTitle,
+      courseUrl: `${this.config.get('frontend.url')}/courses/${payload.courseId}`,
+      unsubscribeUrl: this.unsubscribeUrl(prefs.unsubscribeToken),
+    });
+    await this.enqueue(payload.userEmail, tpl.subject, tpl.html);
+  }
+
   // --- Preferences management ---
 
   async getPreferences(userId: string) {
