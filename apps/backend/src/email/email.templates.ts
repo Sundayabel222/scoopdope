@@ -40,4 +40,19 @@ export const emailTemplates = {
         </p>
       </div>`,
   }),
+
+  moduleUnlocked: (data: { userName: string; courseTitle: string; moduleTitle: string; courseUrl: string; unsubscribeUrl: string }) => ({
+    subject: `New content unlocked in "${data.courseTitle}"`,
+    html: `
+      <div style="font-family:sans-serif;max-width:600px;margin:0 auto">
+        <h2>🔓 New Module Available</h2>
+        <p>Hi ${data.userName},</p>
+        <p>A new module has just unlocked in <strong>${data.courseTitle}</strong>:</p>
+        <p style="font-size:18px;font-weight:bold">${data.moduleTitle}</p>
+        <a href="${data.courseUrl}" style="background:#4F46E5;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none;display:inline-block">Start Learning</a>
+        <p style="margin-top:40px;font-size:12px;color:#999">
+          <a href="${data.unsubscribeUrl}">Unsubscribe</a>
+        </p>
+      </div>`,
+  }),
 };
