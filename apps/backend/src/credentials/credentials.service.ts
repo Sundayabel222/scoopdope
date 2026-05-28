@@ -66,12 +66,24 @@ export class CredentialsService {
     return this.repo.save(credential);
   }
 
-  async findByUser(userId: string) {
-    return this.repo.find({
-      where: { userId },
-      relations: ['course'],
-      order: { issuedAt: 'DESC' },
-    });
+  async issueBundle(userId: string, bundleId: string, stellarPublicKey: string): Promise<Credential> {
+    const existing = await this.repo.findOne({ where: { userId, bundleId } });
+    if (existing) return existing;
+
+    const txHash = await this.stellarService.issueCredential(stellarPublicKey, `bundle:${bundleId}`);
+
+    try {
+      await this.stellarService.mintReward(stellarPublicKey, 500); // Higher reward for bundle completion
+    } catch {
+      // Non-fatal
+    }
+
+    const credential = this.repo.create({ userId, bundleId, txHash, stellarPublicKey });
+    return this.repo.save(credential);
+  }
+
+  findByUser(userId: string) {
+    return this.repo.find({ where: { userId }, order: { issuedAt: 'DESC' } });
   }
 
   async findOne(id: string) {
