@@ -7,6 +7,7 @@ import { Enrollment } from '../enrollments/enrollment.entity';
 import { Course } from '../courses/course.entity';
 import { Progress } from '../progress/progress.entity';
 import { Review } from '../courses/review.entity';
+import { MetricsService } from '../metrics/metrics.service';
 
 interface ScoredCourse extends Course {
   score: number;
@@ -35,6 +36,7 @@ export class RecommendationsService {
     @InjectRepository(Progress) private progressRepo: Repository<Progress>,
     @InjectRepository(Review) private reviewRepo: Repository<Review>,
     @Inject(CACHE_MANAGER) private cache: Cache,
+    private metrics: MetricsService,
   ) {}
 
   async getRecommendations(userId: string, limit = 10): Promise<ScoredCourse[]> {
@@ -89,6 +91,8 @@ export class RecommendationsService {
       .sort((a, b) => b.score - a.score);
 
     const results = scored.slice(0, Math.max(limit, 50));
+
+    this.metrics.incrementRecommendationsServed(results.length);
 
     await this.cache.set(cacheKey, results, this.CACHE_TTL);
     return results.slice(0, limit);
