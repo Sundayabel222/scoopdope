@@ -32,6 +32,7 @@ export default function ProfilePage() {
   const [form, setForm] = useState({ username: '', bio: '', avatarUrl: '' });
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [badges, setBadges] = useState<any[]>([]);
 
   useEffect(() => {
     api.get('/users/me').then((r) => {
@@ -43,6 +44,26 @@ export default function ProfilePage() {
       });
     });
   }, []);
+
+  useEffect(() => {
+    if (!user) return;
+
+    // Fetch credentials, progress, and BST balance in parallel (best-effort)
+    const creds = api.get(`/credentials/${user.id}`).then((r) => r.data).catch(() => []);
+    const progress = api.get(`/users/${user.id}/progress`).then((r) => r.data).catch(() => []);
+    const bst = user.stellarPublicKey
+      ? api.get(`/stellar/balance/${user.stellarPublicKey}`).then((r) => {
+          const b = r.data.balances?.find((b: any) => b.asset_code === 'BST');
+          return parseFloat(b?.balance ?? '0');
+        }).catch(() => 0)
+      : Promise.resolve(0);
+
+    Promise.all([creds, progress, bst]).then(([credentials, progressRecords, bstBalance]) => {
+      const credentialCount = Array.isArray(credentials) ? credentials.length : 0;
+      const input = { credentialCount, bstBalance: Number(bstBalance), progressRecords };
+      setBadges(computeAchievements(input));
+    });
+  }, [user]);
 
   if (!user)
     return <main className="max-w-2xl mx-auto p-8 text-gray-900 dark:text-gray-100">Loading…</main>;
@@ -187,6 +208,7 @@ export default function ProfilePage() {
         onLinked={onWalletLinked}
         onUnlinked={onWalletUnlinked}
       />
+      <AchievementsSection badges={badges} />
     </main>
   );
 }
