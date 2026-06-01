@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import Stripe from 'stripe';
 import { Course } from '../courses/course.entity';
 import { CurrencyConversionService, SupportedCurrency } from './currency-conversion.service';
+import { CouponsService } from '../coupons/coupons.service';
 
 @Injectable()
 export class PaymentsService {
@@ -14,6 +15,7 @@ export class PaymentsService {
   constructor(
     private configService: ConfigService,
     private currencyConversion: CurrencyConversionService,
+    private couponsService: CouponsService,
     @InjectRepository(Course)
     private courseRepo: Repository<Course>,
   ) {
@@ -22,19 +24,36 @@ export class PaymentsService {
     });
   }
 
-  async createPaymentIntent(courseId: string, currency: SupportedCurrency, userId: string) {
+  async createPaymentIntent(
+    courseId: string,
+    currency: SupportedCurrency,
+    userId: string,
+    couponCode?: string,
+  ) {
     const course = await this.courseRepo.findOne({ where: { id: courseId } });
     if (!course) throw new NotFoundException('Course not found');
     if (!course.priceUsd || course.priceUsd <= 0) {
       throw new BadRequestException('This course is free and does not require payment');
     }
 
-    const amount = await this.currencyConversion.toStripeAmount(course.priceUsd, currency);
+    let priceUsd = Number(course.priceUsd);
+    let discountApplied = 0;
+
+    if (couponCode) {
+      const { valid, discount, discountType } = await this.couponsService.validateForCheckout(couponCode, priceUsd);
+      if (valid) {
+        discountApplied = discount;
+        priceUsd = Math.max(0, priceUsd - discount);
+        await this.couponsService.incrementUsage(couponCode);
+      }
+    }
+
+    const amount = await this.currencyConversion.toStripeAmount(priceUsd, currency);
 
     const intent = await this.stripe.paymentIntents.create({
       amount,
       currency: currency.toLowerCase(),
-      metadata: { courseId, userId },
+      metadata: { courseId, userId, couponCode: couponCode ?? '' },
     });
 
     return {
@@ -42,6 +61,8 @@ export class PaymentsService {
       amount,
       currency,
       courseId,
+      discountApplied,
+      finalPriceUsd: priceUsd,
     };
   }
 

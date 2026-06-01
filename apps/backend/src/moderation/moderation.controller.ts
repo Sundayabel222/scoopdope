@@ -9,11 +9,12 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
 import { ModerationService } from './moderation.service';
+import { ContentType } from './moderation.enums';
 import {
   AppealDto,
   FlagContentDto,
@@ -27,6 +28,15 @@ import {
 @Controller('moderation')
 export class ModerationController {
   constructor(private readonly moderationService: ModerationService) {}
+
+  @Get('content/:contentType/:contentId/hidden')
+  @ApiOperation({ summary: 'Check if content is auto-hidden' })
+  isHidden(
+    @Param('contentType') contentType: ContentType,
+    @Param('contentId') contentId: string,
+  ) {
+    return this.moderationService.isContentHidden(contentType, contentId);
+  }
 
   @Post('flag')
   @ApiOperation({ summary: 'Flag content for review' })

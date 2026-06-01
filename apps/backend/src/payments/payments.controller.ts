@@ -26,7 +26,7 @@ export class PaymentsController {
     @Body() dto: CreatePaymentIntentDto,
     @CurrentUser() user: { id: string },
   ) {
-    return this.paymentsService.createPaymentIntent(dto.courseId, dto.currency, user.id);
+    return this.paymentsService.createPaymentIntent(dto.courseId, dto.currency, user.id, dto.couponCode);
   }
 
   @Get('price/:courseId')
