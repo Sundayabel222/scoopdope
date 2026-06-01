@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, Request, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateReviewDto } from './dto/create-review.dto';
@@ -22,6 +22,18 @@ export class ReviewsController {
     @Body() dto: CreateReviewDto
   ) {
     return this.reviewsService.create(courseId, req.user.id, dto);
+  }
+
+  @Patch('courses/:id/reviews/:reviewId/flag')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Flag a review as inappropriate' })
+  @ApiResponse({ status: 200, description: 'Review flagged successfully' })
+  flag(
+    @Param('id') courseId: string,
+    @Param('reviewId') reviewId: string,
+  ) {
+    return this.reviewsService.flagReview(courseId, reviewId);
   }
 
   @Get('courses/:id/reviews')
