@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import useSWRInfinite from 'swr/infinite';
 import Link from 'next/link';
@@ -10,6 +10,7 @@ import { useBookmarksStore } from '@/store/bookmarks.store';
 import { useCompareStore } from '@/store/compare.store';
 import { CompareBar } from '@/components/courses/CompareBar';
 import { BundleCard } from '@/components/ui/BundleCard';
+import { Badge } from '@/components/ui/Badge';
 import api from '@/lib/api';
 import { toast } from '@/lib/toast';
 
@@ -50,6 +51,12 @@ const DURATIONS = [
   { label: '2–5h', value: '2-5' },
   { label: '5–10h', value: '5-10' },
   { label: '10h+', value: '10-999' },
+];
+const PRICE_RANGES = [
+  { label: 'Free', value: 'free' },
+  { label: 'Under $20', value: '0-20' },
+  { label: '$20–$50', value: '20-50' },
+  { label: '$50+', value: '50-999' },
 ];
 const SORT_OPTIONS: { label: string; value: SortOption }[] = [
   { label: 'Newest', value: 'newest' },
@@ -200,6 +207,7 @@ export default function CoursesPage() {
   const [category, setCategory] = useState(() => searchParams.get('category') ?? '');
   const [duration, setDuration] = useState(() => searchParams.get('duration') ?? '');
   const [sort, setSort] = useState<SortOption>(() => (searchParams.get('sort') as SortOption) ?? 'newest');
+  const [price, setPrice] = useState(() => searchParams.get('price') ?? '');
 
   const debouncedQuery = useDebounce(query);
 
@@ -213,15 +221,17 @@ export default function CoursesPage() {
       const c = overrides.category ?? category;
       const d = overrides.duration ?? duration;
       const s = overrides.sort ?? sort;
+      const pr = overrides.price ?? price;
       if (q.trim()) p.set('search', q.trim());
       if (l) p.set('level', l);
       if (lang) p.set('language', lang);
       if (c) p.set('category', c);
       if (d) p.set('duration', d);
+      if (pr) p.set('price', pr);
       if (s !== 'newest') p.set('sort', s);
       router.push(`/courses?${p.toString()}`, { scroll: false });
     },
-    [debouncedQuery, level, language, category, duration, sort, router]
+    [debouncedQuery, level, language, category, duration, sort, price, router]
   );
 
   // Push URL on debounced query change
@@ -231,7 +241,7 @@ export default function CoursesPage() {
     pushUrl({ search: debouncedQuery });
   }, [debouncedQuery]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const filterKey = `${debouncedQuery}-${level}-${language}-${category}-${duration}-${sort}`;
+  const filterKey = `${debouncedQuery}-${level}-${language}-${category}-${duration}-${price}-${sort}`;
 
   const getKey = (pageIndex: number, previousPageData: CoursesResponse | null) => {
     if (previousPageData && previousPageData.data.length === 0) return null; // reached the end
@@ -241,6 +251,10 @@ export default function CoursesPage() {
     if (language) p.set('language', language);
     if (category) p.set('category', category);
     if (duration) { const [min, max] = duration.split('-'); p.set('durationMin', min); p.set('durationMax', max); }
+    if (price) {
+      if (price === 'free') { p.set('priceMax', '0'); }
+      else { const [pMin, pMax] = price.split('-'); p.set('priceMin', pMin); p.set('priceMax', pMax); }
+    }
     p.set('sort', sort);
     p.set('page', String(pageIndex + 1));
     p.set('limit', '9');
@@ -285,6 +299,7 @@ export default function CoursesPage() {
     if (key === 'language') setLanguage(value);
     if (key === 'category') setCategory(value);
     if (key === 'duration') setDuration(value);
+    if (key === 'price') setPrice(value);
     if (key === 'sort') setSort(value as SortOption);
     pushUrl(updates);
   }
@@ -295,11 +310,12 @@ export default function CoursesPage() {
     ...(language ? [{ label: `Language: ${LANGUAGES.find((l) => l.value === language)?.label ?? language}`, clear: () => applyFilter('language', '') }] : []),
     ...(category ? [{ label: `Category: ${category}`, clear: () => applyFilter('category', '') }] : []),
     ...(duration ? [{ label: `Duration: ${DURATIONS.find((d) => d.value === duration)?.label ?? duration}`, clear: () => applyFilter('duration', '') }] : []),
+    ...(price ? [{ label: `Price: ${PRICE_RANGES.find((p) => p.value === price)?.label ?? price}`, clear: () => applyFilter('price', '') }] : []),
     ...(sort !== 'newest' ? [{ label: `Sort: ${SORT_OPTIONS.find((s) => s.value === sort)?.label}`, clear: () => applyFilter('sort', 'newest') }] : []),
   ];
 
   const clearAll = () => {
-    setLevel(''); setLanguage(''); setCategory(''); setDuration(''); setSort('newest');
+    setLevel(''); setLanguage(''); setCategory(''); setDuration(''); setPrice(''); setSort('newest');
     router.push('/courses', { scroll: false });
   };
 
@@ -383,6 +399,13 @@ export default function CoursesPage() {
             {DURATIONS.map((d) => <option key={d.value} value={d.value}>{d.label}</option>)}
           </select>
 
+          <select value={price} onChange={(e) => applyFilter('price', e.target.value)}
+            className="rounded-lg border border-gray-300 dark:border-gray-700 px-3 py-2 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-gray-100"
+            aria-label="Filter by price">
+            <option value="">Any Price</option>
+            {PRICE_RANGES.map((p) => <option key={p.value} value={p.value}>{p.label}</option>)}
+          </select>
+
           <select value={sort} onChange={(e) => applyFilter('sort', e.target.value)}
             className="rounded-lg border border-gray-300 dark:border-gray-700 px-3 py-2 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-gray-100"
             aria-label="Sort courses">
@@ -443,7 +466,7 @@ export default function CoursesPage() {
                     {course.language && <><span>·</span><span className="uppercase">{course.language}</span></>}
                     {course.category && <><span>·</span><span>{course.category}</span></>}
                     {course.durationHours != null && <><span>·</span><span>{course.durationHours}h</span></>}
-                    {course.rating != null && <><span>·</span><span>★ {course.rating}</span></>}
+                    {course.rating != null && <><span>·</span><span className="text-yellow-500">★ {course.rating.toFixed ? course.rating.toFixed(1) : course.rating}</span></>}
                   </div>
                   {course.description && (
                     <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2">{course.description}</p>
