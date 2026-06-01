@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, LessThan } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CourseAccessControl, AccessRole } from './course-access-control.entity';
-import { AccessLog } from './access-log.entity';
+import { AccessLog, AccessAttemptType } from './access-log.entity';
 
 @Injectable()
 export class AccessControlService {
@@ -72,6 +72,42 @@ export class AccessControlService {
     );
   }
 
+  async verifyContentAccess(
+    courseId: string,
+    userId: string,
+    contentId: string,
+    ipAddress?: string,
+  ): Promise<void> {
+    const access = await this.accessRepo.findOne({
+      where: { courseId, userId, isActive: true },
+    });
+
+    const attemptType = access?.role === AccessRole.STUDENT ? AccessAttemptType.PAYMENT : AccessAttemptType.FREE;
+
+    if (!access) {
+      await this.logAccess(courseId, userId, 'content_denied', ipAddress, false, 'No access granted', AccessAttemptType.PAYMENT, contentId);
+      throw new ForbiddenException('Purchase required to access this content');
+    }
+
+    if (access.subscriptionExpiryDate && new Date() > access.subscriptionExpiryDate) {
+      await this.logAccess(courseId, userId, 'content_denied', ipAddress, false, 'Access pass expired', AccessAttemptType.SUBSCRIPTION, contentId);
+      throw new ForbiddenException('Your access pass has expired');
+    }
+
+    await this.logAccess(courseId, userId, 'content_accessed', ipAddress, true, null, attemptType, contentId);
+  }
+
+  async grantTimeLimitedAccess(
+    courseId: string,
+    userId: string,
+    role: AccessRole,
+    expiresInHours: number,
+  ) {
+    const expiryDate = new Date();
+    expiryDate.setHours(expiryDate.getHours() + expiresInHours);
+    return this.grantAccess(courseId, userId, role, expiryDate);
+  }
+
   async logAccess(
     courseId: string,
     userId: string,
@@ -79,6 +115,8 @@ export class AccessControlService {
     ipAddress?: string,
     isAllowed: boolean = true,
     denialReason?: string,
+    attemptType?: AccessAttemptType,
+    contentId?: string,
   ) {
     const log = this.logRepo.create({
       courseId,
@@ -87,6 +125,8 @@ export class AccessControlService {
       ipAddress,
       isAllowed,
       denialReason,
+      attemptType: attemptType ?? null,
+      contentId: contentId ?? null,
     });
     return this.logRepo.save(log);
   }
