@@ -26,6 +26,7 @@ export class StellarService {
   private analyticsContractId: string;
   private tokenContractId: string;
   private credentialMetadataContractId: string;
+  private certificateContractId: string;
   private contractId: string;
   private enrollmentContractId: string;
 
@@ -50,6 +51,8 @@ export class StellarService {
     this.tokenContractId = this.configService.get<string>('stellar.tokenContractId') ?? '';
     this.credentialMetadataContractId =
       this.configService.get<string>('stellar.credentialMetadataContractId') ?? '';
+    this.certificateContractId =
+      this.configService.get<string>('stellar.certificateContractId') ?? '';
   }
 
   // ── Public API ────────────────────────────────────────────────────────────
