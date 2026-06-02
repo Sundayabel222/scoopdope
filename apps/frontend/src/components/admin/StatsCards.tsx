@@ -43,7 +43,7 @@ export function StatsCards() {
 
   if (error || !stats) {
     return (
-      <div className="border border-red-200 rounded-lg p-6 text-center">
+      <div className="border border-blue-200 rounded-lg p-6 text-center">
         <p className="text-red-600 mb-3">Failed to load statistics.</p>
         <button className="text-blue-600 hover:underline text-sm" onClick={load}>Retry</button>
       </div>
