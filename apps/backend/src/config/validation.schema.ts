@@ -80,4 +80,7 @@ export const validationSchema = Joi.object({
 
   // Exchange Rate (optional — falls back to free open.er-api.com)
   EXCHANGE_RATE_API_KEY: Joi.string().allow('').default(''),
+
+  // OpenTelemetry
+  OTEL_SAMPLING_RATE: Joi.number().min(0).max(1).default(0.1),
 });
