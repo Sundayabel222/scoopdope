@@ -20,7 +20,7 @@ export default () => ({
 
   stellar: {
     network: process.env.STELLAR_NETWORK as 'testnet' | 'mainnet',
-    secretKey: process.env.STELLAR_SECRET_KEY!,
+    secretKey: process.env.STELLAR_SECRET_KEY || '',
     sorobanRpcUrl: process.env.SOROBAN_RPC_URL || 'https://soroban-testnet.stellar.org',
     contractId: process.env.SOROBAN_CONTRACT_ID || '',
     enrollmentContractId: process.env.ENROLLMENT_CONTRACT_ID || '',

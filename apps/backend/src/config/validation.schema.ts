@@ -20,7 +20,7 @@ export const validationSchema = Joi.object({
 
   // Stellar
   STELLAR_NETWORK: Joi.string().valid('testnet', 'mainnet').default('testnet'),
-  STELLAR_SECRET_KEY: Joi.string().required(),
+  STELLAR_SECRET_KEY: Joi.string().optional(),
   SOROBAN_RPC_URL: Joi.string().uri().default('https://soroban-testnet.stellar.org'),
   SOROBAN_CONTRACT_ID: Joi.string().allow('').default(''),
   ENROLLMENT_CONTRACT_ID: Joi.string().allow('').default(''),

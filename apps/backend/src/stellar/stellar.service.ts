@@ -1,4 +1,4 @@
-import { Injectable, Logger, Inject } from '@nestjs/common';
+import { Injectable, Logger, Inject, ServiceUnavailableException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Cache } from 'cache-manager';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
@@ -29,6 +29,7 @@ export class StellarService {
   private certificateContractId: string;
   private contractId: string;
   private enrollmentContractId: string;
+  private secretKey: string;
 
   constructor(
     private configService: ConfigService,
@@ -53,6 +54,15 @@ export class StellarService {
       this.configService.get<string>('stellar.credentialMetadataContractId') ?? '';
     this.certificateContractId =
       this.configService.get<string>('stellar.certificateContractId') ?? '';
+    this.secretKey = this.configService.get<string>('stellar.secretKey') ?? '';
+
+    if (!this.secretKey) {
+      this.logger.warn(
+        '⚠️  STELLAR_SECRET_KEY is not configured. ' +
+          'Read-only operations (querying balances, transactions) will work, ' +
+          'but signing operations (issuing credentials, minting tokens) will fail.'
+      );
+    }
   }
 
   // ── Public API ────────────────────────────────────────────────────────────
@@ -67,6 +77,7 @@ export class StellarService {
    * @throws {Error} propagated from Soroban RPC on simulation/submission failure
    */
   async recordEnrollment(studentPublicKey: string, courseId: string): Promise<string> {
+    this.ensureSecretKeyConfigured();
     if (!this.enrollmentContractId) {
       throw new Error('ENROLLMENT_CONTRACT_ID is not configured');
     }
@@ -123,6 +134,7 @@ export class StellarService {
     courseId: string,
     metadata?: { courseName: string; grade: string; skills: string[] }
   ): Promise<string> {
+    this.ensureSecretKeyConfigured();
     try {
       await this.retryWithBackoff(() => this.recordProgressOnChain(recipientPublicKey, courseId));
       this.logger.log(`Progress recorded on Soroban for ${courseId}`);
@@ -151,9 +163,8 @@ export class StellarService {
     studentPublicKey: string,
     metadata: { courseName: string; grade: string; skills: string[] }
   ): Promise<string> {
-    const issuerKeypair = Keypair.fromSecret(
-      this.configService.get<string>('stellar.secretKey') ?? ''
-    );
+    this.ensureSecretKeyConfigured();
+    const issuerKeypair = Keypair.fromSecret(this.secretKey);
 
     return this.invokeContract(this.credentialMetadataContractId, 'store_metadata', [
       new Address(issuerKeypair.publicKey()).toScVal(), // admin
@@ -170,6 +181,7 @@ export class StellarService {
     courseId: string,
     _progressPct: number
   ): Promise<string> {
+    this.ensureSecretKeyConfigured();
     return this.retryWithBackoff(() =>
       this.invokeContract(this.analyticsContractId ?? this.contractId, 'record_progress', [
         new Address(studentPublicKey).toScVal(),
@@ -181,6 +193,7 @@ export class StellarService {
 
   /** Read BST balance for an address from the Token contract (read-only simulate) */
   async getTokenBalance(stellarPublicKey: string): Promise<string> {
+    this.ensureSecretKeyConfigured();
     if (!this.tokenContractId) {
       throw new Error('TOKEN_CONTRACT_ID not configured');
     }
@@ -189,9 +202,7 @@ export class StellarService {
     const cached = await this.cacheManager.get<string>(cacheKey);
     if (cached !== undefined && cached !== null) return cached;
 
-    const issuerKeypair = Keypair.fromSecret(
-      this.configService.get<string>('stellar.secretKey') ?? ''
-    );
+    const issuerKeypair = Keypair.fromSecret(this.secretKey);
     const source = await this.sorobanServer.getAccount(issuerKeypair.publicKey());
 
     const tx = new TransactionBuilder(source as any, {
@@ -223,6 +234,7 @@ export class StellarService {
 
   /** Mint reward tokens via the Token Soroban contract */
   async mintReward(recipientPublicKey: string, amount: number): Promise<string> {
+    this.ensureSecretKeyConfigured();
     if (!this.tokenContractId) {
       throw new Error('TOKEN_CONTRACT_ID not configured');
     }
@@ -236,6 +248,16 @@ export class StellarService {
 
   // ── Private helpers ───────────────────────────────────────────────────────
 
+  private ensureSecretKeyConfigured(): void {
+    if (!this.secretKey) {
+      throw new ServiceUnavailableException(
+        'STELLAR_SECRET_KEY is not configured. ' +
+          'Signing operations (issuing credentials, minting tokens, recording progress) require the secret key. ' +
+          'Configure STELLAR_SECRET_KEY environment variable to enable these features.'
+      );
+    }
+  }
+
   private async recordProgressOnChain(studentPublicKey: string, courseId: string): Promise<void> {
     await this.invokeContract(this.analyticsContractId ?? this.contractId, 'record_progress', [
       new Address(studentPublicKey).toScVal(),
@@ -248,9 +270,8 @@ export class StellarService {
     recipientPublicKey: string,
     courseId: string
   ): Promise<void> {
-    const issuerKeypair = Keypair.fromSecret(
-      this.configService.get<string>('stellar.secretKey') ?? ''
-    );
+    this.ensureSecretKeyConfigured();
+    const issuerKeypair = Keypair.fromSecret(this.secretKey);
     const issuerAccount = await this.server.loadAccount(issuerKeypair.publicKey());
 
     const tx = new TransactionBuilder(issuerAccount, {
@@ -271,9 +292,8 @@ export class StellarService {
   }
 
   private async invokeContract(contractId: string, method: string, args: any[]): Promise<string> {
-    const issuerKeypair = Keypair.fromSecret(
-      this.configService.get<string>('stellar.secretKey') ?? ''
-    );
+    this.ensureSecretKeyConfigured();
+    const issuerKeypair = Keypair.fromSecret(this.secretKey);
     const source = await this.sorobanServer.getAccount(issuerKeypair.publicKey());
 
     const tx = new TransactionBuilder(source as any, {
@@ -301,9 +321,8 @@ export class StellarService {
     recipientPublicKey: string,
     courseId: string
   ): Promise<string> {
-    const issuerKeypair = Keypair.fromSecret(
-      this.configService.get<string>('stellar.secretKey') ?? ''
-    );
+    this.ensureSecretKeyConfigured();
+    const issuerKeypair = Keypair.fromSecret(this.secretKey);
     const issuerAccount = await this.server.loadAccount(issuerKeypair.publicKey());
 
     const tx = new TransactionBuilder(issuerAccount, {
