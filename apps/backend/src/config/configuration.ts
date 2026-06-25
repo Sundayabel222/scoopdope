@@ -1,3 +1,20 @@
+function buildRedisUrl(): string {
+  if (process.env.REDIS_URL) {
+    return process.env.REDIS_URL;
+  }
+
+  // Fallback: build Redis URL from individual components
+  const host = process.env.REDIS_HOST || 'localhost';
+  const port = process.env.REDIS_PORT || '6379';
+  const password = process.env.REDIS_PASSWORD || '';
+  const db = process.env.REDIS_DB || '0';
+
+  if (password) {
+    return `redis://:${password}@${host}:${port}/${db}`;
+  }
+  return `redis://${host}:${port}/${db}`;
+}
+
 export default () => ({
   port: parseInt(process.env.PORT || '3000', 10),
   nodeEnv: process.env.NODE_ENV || 'development',
@@ -15,7 +32,7 @@ export default () => ({
   },
 
   redis: {
-    url: process.env.REDIS_URL!,
+    url: buildRedisUrl(),
   },
 
   stellar: {
