@@ -3,7 +3,20 @@ import { config } from 'dotenv';
 
 config();
 
-const isProduction = process.env.NODE_ENV === 'production';
+const nodeEnv = process.env.NODE_ENV || 'development';
+const isProduction = nodeEnv === 'production';
+const isStaging = nodeEnv === 'staging';
+
+// Ensure synchronize is always false for migrations (safety first)
+const synchronize = false;
+
+// Validate synchronize setting for safety
+if ((isProduction || isStaging) && synchronize) {
+  throw new Error(
+    `CRITICAL: TypeORM synchronize is enabled in ${nodeEnv} environment. ` +
+    `This can cause data loss. Synchronize must be disabled in production and staging.`
+  );
+}
 
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
@@ -28,7 +41,7 @@ export const dataSourceOptions: DataSourceOptions = {
     max: parseInt(process.env.DB_POOL_SIZE || '10', 10),
     idleTimeoutMillis: parseInt(process.env.DB_IDLE_TIMEOUT || '10000', 10),
   },
-  synchronize: false,
+  synchronize,
 };
 
 export const AppDataSource = new DataSource(dataSourceOptions);
